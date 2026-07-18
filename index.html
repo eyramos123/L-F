@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceBack - Lost & Found Management System</title>
+  
+  <!-- CSS Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Global Header/Navbar Wrapper -->
+  <header></header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container text-center pt-5 pb-4">
+      <h1 class="hero-title text-main display-4 mb-3 animate-slide-up">
+        Reconnecting What's Lost,<br>
+        <span class="text-emerald">Restoring Peace of Mind.</span>
+      </h1>
+      <p class="hero-subtitle lead col-lg-7 mx-auto mb-5 animate-slide-up" style="animation-delay: 0.1s;">
+        The community-driven lost and found catalog. Search active items, report found items, or offer rewards to get your valuables back.
+      </p>
+
+      <!-- Advanced Search Bar Card -->
+      <div class="row justify-content-center animate-slide-up" style="animation-delay: 0.2s;">
+        <div class="col-lg-10">
+          <div class="card glass-card p-4 text-start">
+            <h5 class="fw-bold mb-3 text-main"><i class="bi bi-sliders me-2 text-emerald"></i> Advanced Search Catalog</h5>
+            
+            <form id="homepage-search-form" class="row g-3">
+              <!-- Keyword input -->
+              <div class="col-md-6 col-lg-4 position-relative">
+                <label for="search-keyword" class="form-label text-muted small fw-bold">Search Keywords</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-muted"></i></span>
+                  <input type="text" class="form-control border-start-0" id="search-keyword" placeholder="Item, brand, color, location..." autocomplete="off">
+                </div>
+                <div class="search-suggestion-box" id="keyword-suggestions"></div>
+              </div>
+
+              <!-- Category -->
+              <div class="col-md-6 col-lg-3">
+                <label for="search-category" class="form-label text-muted small fw-bold">Category</label>
+                <select class="form-select" id="search-category">
+                  <option value="all">All Categories</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Wallet">Wallet</option>
+                  <option value="Documents">Documents</option>
+                  <option value="Keys">Keys</option>
+                  <option value="Jewelry">Jewelry</option>
+                  <option value="Bags">Bags</option>
+                  <option value="Pets">Pets</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="School Items">School Items</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
+
+              <!-- Item Type -->
+              <div class="col-md-6 col-lg-3">
+                <label for="search-type" class="form-label text-muted small fw-bold">Report Type</label>
+                <select class="form-select" id="search-type">
+                  <option value="all">All Items</option>
+                  <option value="lost">Lost Reports</option>
+                  <option value="found">Found Reports</option>
+                </select>
+              </div>
+
+              <!-- Sort Option -->
+              <div class="col-md-6 col-lg-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-custom btn-custom-primary w-100 py-2.5">
+                  Search
+                </button>
+              </div>
+
+              <!-- Toggle Collapsible Filters -->
+              <div class="col-12 mt-2">
+                <button class="btn btn-link btn-sm text-decoration-none text-emerald p-0" type="button" data-bs-toggle="collapse" data-bs-target="#moreFilters" aria-expanded="false" aria-controls="moreFilters">
+                  <i class="bi bi-plus-lg me-1"></i> More Filters (Location, Date, Brand, Status)
+                </button>
+              </div>
+
+              <!-- Collapsible Filters -->
+              <div class="collapse col-12" id="moreFilters">
+                <div class="row g-3 pt-2">
+                  <div class="col-md-3">
+                    <label for="search-location" class="form-label text-muted small fw-bold">Specific Location</label>
+                    <input type="text" class="form-control form-control-sm" id="search-location" placeholder="e.g. Library, Park">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="search-color" class="form-label text-muted small fw-bold">Color</label>
+                    <input type="text" class="form-control form-control-sm" id="search-color" placeholder="e.g. Black, Silver">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="search-brand" class="form-label text-muted small fw-bold">Brand</label>
+                    <input type="text" class="form-control form-control-sm" id="search-brand" placeholder="e.g. Apple, Nike">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="search-date" class="form-label text-muted small fw-bold">Date Reported</label>
+                    <input type="date" class="form-control form-control-sm" id="search-date">
+                  </div>
+                  <div class="col-md-3">
+                    <label for="search-status" class="form-label text-muted small fw-bold">Status</label>
+                    <select class="form-select form-select-sm" id="search-status">
+                      <option value="all">All Statuses</option>
+                      <option value="active">Active (Open)</option>
+                      <option value="claimed">Claimed</option>
+                      <option value="returned">Returned</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label for="search-sort" class="form-label text-muted small fw-bold">Sort By</label>
+                    <select class="form-select form-select-sm" id="search-sort">
+                      <option value="newest">Newest First</option>
+                      <option value="oldest">Oldest First</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Catalog Area -->
+  <main class="container py-5">
+    
+    <!-- Dynamic Search Results Section -->
+    <div id="search-results-section" class="mb-5 d-none">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-main mb-0"><i class="bi bi-search me-2 text-emerald"></i> Search Results</h3>
+        <button class="btn btn-sm btn-outline-secondary btn-custom" id="btn-clear-search">Clear Search</button>
+      </div>
+      <div id="search-results-container" class="row g-4"></div>
+      <hr class="my-5 border-secondary opacity-10">
+    </div>
+
+    <!-- Recent Lost and Found Side-by-Side -->
+    <div id="default-reports-section" class="row g-5">
+      
+      <!-- Recent Lost Items -->
+      <div class="col-lg-6">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-bold text-main mb-0">
+            <span class="border-bottom border-danger border-3 pb-2"><i class="bi bi-file-earmark-exclamation-fill text-danger me-2"></i>Recent Lost Items</span>
+          </h3>
+          <a href="#" class="btn btn-link btn-sm text-decoration-none text-emerald font-semibold btn-see-all-lost">See All</a>
+        </div>
+        <div class="row g-4" id="recent-lost-container">
+          <!-- Dynamically populated -->
+          <div class="col-12 text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-emerald"></div> Loading...</div>
+        </div>
+      </div>
+
+      <!-- Recent Found Items -->
+      <div class="col-lg-6">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-bold text-main mb-0">
+            <span class="border-bottom border-success border-3 pb-2"><i class="bi bi-file-earmark-check-fill text-emerald me-2"></i>Recent Found Items</span>
+          </h3>
+          <a href="#" class="btn btn-link btn-sm text-decoration-none text-emerald font-semibold btn-see-all-found">See All</a>
+        </div>
+        <div class="row g-4" id="recent-found-container">
+          <!-- Dynamically populated -->
+          <div class="col-12 text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-emerald"></div> Loading...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recently Viewed Reports Section -->
+    <div id="recently-viewed-section" class="mt-5 d-none">
+      <hr class="my-5 border-secondary opacity-10">
+      <h3 class="fw-bold text-main mb-4"><i class="bi bi-clock-history me-2 text-emerald"></i> Recently Viewed</h3>
+      <div class="row g-4" id="recently-viewed-container"></div>
+    </div>
+
+    <!-- How It Works Section -->
+    <hr class="my-5 border-secondary opacity-10">
+    <section class="py-4">
+      <div class="text-center mb-5">
+        <h2 class="fw-extrabold text-main">How It Works</h2>
+        <p class="text-muted col-lg-6 mx-auto">Reconnecting lost assets is a simple four-step moderation system structured to guarantee speed, safety, and legitimacy.</p>
+      </div>
+      
+      <div class="row g-4 text-center">
+        <div class="col-md-3">
+          <div class="card glass-card p-4 h-100 border-0">
+            <div class="rounded-circle bg-danger-subtle text-danger mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-pencil-square fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-main mb-2">1. Submit Report</h5>
+            <p class="text-muted small mb-0">Fill out details about your lost item, or document a found item with maps coordinates.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="card glass-card p-4 h-100 border-0">
+            <div class="rounded-circle bg-warning-subtle text-warning mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-shield-check fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-main mb-2">2. Verification</h5>
+            <p class="text-muted small mb-0">Administrators review and moderate new posts to prevent spam or false reports.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card glass-card p-4 h-100 border-0">
+            <div class="rounded-circle bg-info-subtle text-info mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-search fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-main mb-2">3. Match Search</h5>
+            <p class="text-muted small mb-0">Browse details and filter color, locations, categories, or check auto-suggestions.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="card glass-card p-4 h-100 border-0">
+            <div class="rounded-circle bg-success-subtle text-success mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
+              <i class="bi bi-hand-thumbs-up fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-main mb-2">4. Claim & Return</h5>
+            <p class="text-muted small mb-0">Contact the reporter securely, verify ownership details, and return the item.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Statistics Card -->
+    <section class="mt-5 pt-4">
+      <div class="card glass-card border-0 p-5 overflow-hidden position-relative">
+        <div class="position-absolute top-0 end-0 opacity-10 fs-1 p-5 text-emerald"><i class="bi bi-graph-up-arrow" style="font-size: 15rem;"></i></div>
+        <div class="row align-items-center g-4">
+          <div class="col-lg-5">
+            <h2 class="fw-extrabold text-main mb-3">TraceBack Activity</h2>
+            <p class="text-muted mb-0">Our platform operates serverless in real-time, providing live statistics regarding resolved reports and items successfully returned.</p>
+          </div>
+          <div class="col-lg-7">
+            <div class="row g-4 text-center">
+              <div class="col-4">
+                <div class="fs-1 fw-extrabold text-emerald" id="stat-returned-items">0</div>
+                <div class="text-muted small font-semibold uppercase">Returned Items</div>
+              </div>
+              <div class="col-4">
+                <div class="fs-1 fw-extrabold text-main" id="stat-registered-items">0</div>
+                <div class="text-muted small font-semibold uppercase">Total Claims</div>
+              </div>
+              <div class="col-4">
+                <div class="fs-1 fw-extrabold text-main" id="stat-active-members">0</div>
+                <div class="text-muted small font-semibold uppercase">Active Users</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Footer Wrapper -->
+  <footer></footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script type="module">
+    import "./js/auth.js";
+    import { db, collection, query, where, getDocs, limit, orderBy, doc, getDoc } from "./js/firebase.js";
+    import { initTheme, timeAgo, showLoader, hideLoader, showToast } from "./js/utils.js";
+    import { fetchSearchableReports, searchAndFilterReports, setupSearchSuggestions } from "./js/search.js";
+
+    let allReports = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initTheme();
+
+      // Load Statistics & Main Reports
+      try {
+        allReports = await fetchSearchableReports(false);
+        renderRecentReports();
+        renderStatistics();
+        setupSearchAutocomplete();
+        loadRecentlyViewed();
+      } catch (err) {
+        console.error("Initialization error:", err);
+      }
+    });
+
+    // Populate Side-By-Side Recent Cards
+    function renderRecentReports() {
+      const lostContainer = document.getElementById('recent-lost-container');
+      const foundContainer = document.getElementById('recent-found-container');
+      
+      const activeLost = allReports.filter(r => r.type === 'lost' && r.status === 'active').slice(0, 3);
+      const activeFound = allReports.filter(r => r.type === 'found' && r.status === 'active').slice(0, 3);
+
+      populateContainer(lostContainer, activeLost, 'lost');
+      populateContainer(foundContainer, activeFound, 'found');
+    }
+
+    function populateContainer(container, items, type) {
+      if (!container) return;
+      if (items.length === 0) {
+        container.innerHTML = `
+          <div class="col-12 text-center py-5 text-muted glass-card">
+            <i class="bi bi-inbox fs-2 mb-2 d-block"></i>
+            <p class="mb-0">No active ${type} reports at the moment.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = '';
+      items.forEach(report => {
+        const img = report.photos?.[0] || 'https://via.placeholder.com/300x200?text=No+Photo';
+        const badgeClass = report.type === 'lost' ? 'type-lost' : 'type-found';
+
+        const card = `
+          <div class="col-12">
+            <div class="card glass-card overflow-hidden">
+              <div class="row g-0">
+                <div class="col-sm-4 card-img-wrapper" style="height: auto; min-height: 140px;">
+                  <span class="type-pill ${badgeClass}">${report.type}</span>
+                  <img src="${img}" alt="${report.itemName}" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="col-sm-8">
+                  <div class="card-body p-3 d-flex flex-column h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="text-muted small"><i class="bi bi-geo-alt"></i> ${report.location}</span>
+                      <span class="text-muted small">${timeAgo(report.createdAt)}</span>
+                    </div>
+                    <h6 class="card-title text-main fw-bold mb-1">${report.itemName}</h6>
+                    <p class="card-text text-muted small mb-3 flex-grow-1">${report.description.substring(0, 75)}${report.description.length > 75 ? '...' : ''}</p>
+                    <a href="report-details.html?id=${report.id}" class="btn btn-sm btn-custom btn-custom-outline mt-auto w-100 btn-view-details" data-id="${report.id}">
+                      View Details
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', card);
+      });
+
+      // Hook up details recently viewed logger
+      container.querySelectorAll('.btn-view-details').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const reportId = e.currentTarget.getAttribute('data-id');
+          logRecentlyViewed(reportId);
+        });
+      });
+    }
+
+    /**
+     * Aggregates counter metrics for homepage statistics banner
+     */
+    async function renderStatistics() {
+      try {
+        const usersSnap = await getDocs(collection(db, "users"));
+        
+        let returnedCount = 0;
+        let registeredCount = 0;
+
+        allReports.forEach(r => {
+          registeredCount++;
+          if (r.status === 'claimed' || r.status === 'returned') {
+            returnedCount++;
+          }
+        });
+
+        document.getElementById('stat-returned-items').textContent = returnedCount;
+        document.getElementById('stat-registered-items').textContent = registeredCount;
+        document.getElementById('stat-active-members').textContent = usersSnap.size;
+      } catch (err) {
+        console.error("Error setting stats labels:", err);
+      }
+    }
+
+    /**
+     * Dynamic client-side advanced searching on index page
+     */
+    const searchForm = document.getElementById('homepage-search-form');
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const keyword = document.getElementById('search-keyword').value;
+      const category = document.getElementById('search-category').value;
+      const type = document.getElementById('search-type').value;
+      
+      const location = document.getElementById('search-location').value;
+      const color = document.getElementById('search-color').value;
+      const brand = document.getElementById('search-brand').value;
+      const date = document.getElementById('search-date').value;
+      const status = document.getElementById('search-status').value;
+      const sortBy = document.getElementById('search-sort').value;
+
+      const criteria = {
+        keyword, category, type, location, color, brand, date, status, sortBy
+      };
+
+      const results = searchAndFilterReports(allReports, criteria);
+      renderSearchResults(results);
+    });
+
+    function renderSearchResults(results) {
+      const resultsSection = document.getElementById('search-results-section');
+      const resultsContainer = document.getElementById('search-results-container');
+      const defaultSection = document.getElementById('default-reports-section');
+
+      defaultSection.classList.add('d-none');
+      resultsSection.classList.remove('d-none');
+
+      if (results.length === 0) {
+        resultsContainer.innerHTML = `
+          <div class="col-12 text-center py-5 text-muted glass-card">
+            <i class="bi bi-slash-circle fs-1 mb-2 d-block"></i>
+            <h4>No Results Found</h4>
+            <p>Try clearing filters or matching different search terms.</p>
+          </div>
+        `;
+        return;
+      }
+
+      resultsContainer.innerHTML = '';
+      results.forEach(report => {
+        const img = report.photos?.[0] || 'https://via.placeholder.com/300x200?text=No+Photo';
+        const typeClass = report.type === 'lost' ? 'type-lost' : 'type-found';
+        
+        let statusBadge = 'status-pending';
+        if (report.status === 'active') statusBadge = 'status-active';
+        else if (report.status === 'claimed' || report.status === 'returned') statusBadge = 'status-claimed';
+        else if (report.status === 'closed') statusBadge = 'status-closed';
+
+        const card = `
+          <div class="col-md-6 col-lg-4">
+            <div class="card glass-card h-100 overflow-hidden">
+              <div class="card-img-wrapper">
+                <span class="type-pill ${typeClass}">${report.type}</span>
+                <img src="${img}" alt="${report.itemName}" loading="lazy">
+              </div>
+              <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="status-badge ${statusBadge}">${report.status}</span>
+                  <span class="text-muted small"><i class="bi bi-clock"></i> ${timeAgo(report.createdAt)}</span>
+                </div>
+                <h5 class="card-title text-main fw-bold mb-1">${report.itemName}</h5>
+                <span class="text-muted d-block small mb-3"><i class="bi bi-tag-fill text-emerald me-1"></i> ${report.category}</span>
+                <p class="card-text text-muted small flex-grow-1">${report.description.substring(0, 80)}${report.description.length > 80 ? '...' : ''}</p>
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary border-opacity-10">
+                  <span class="text-muted small"><i class="bi bi-geo-alt"></i> ${report.location}</span>
+                  <a href="report-details.html?id=${report.id}" class="btn btn-sm btn-custom btn-custom-outline btn-view-details" data-id="${report.id}">
+                    View Details
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        resultsContainer.insertAdjacentHTML('beforeend', card);
+      });
+
+      // Hook up details logger for search results
+      resultsContainer.querySelectorAll('.btn-view-details').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const reportId = e.currentTarget.getAttribute('data-id');
+          logRecentlyViewed(reportId);
+        });
+      });
+    }
+
+    // Clear search toggle back to recent listings
+    document.getElementById('btn-clear-search').addEventListener('click', () => {
+      document.getElementById('homepage-search-form').reset();
+      document.getElementById('search-results-section').classList.add('d-none');
+      document.getElementById('default-reports-section').classList.remove('d-none');
+    });
+
+    // Handle Quick filters "See All"
+    document.querySelectorAll('.btn-see-all-lost').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('search-type').value = 'lost';
+        searchForm.dispatchEvent(new Event('submit'));
+      });
+    });
+
+    document.querySelectorAll('.btn-see-all-found').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('search-type').value = 'found';
+        searchForm.dispatchEvent(new Event('submit'));
+      });
+    });
+
+    /**
+     * Setup search suggestion binding
+     */
+    function setupSearchAutocomplete() {
+      const input = document.getElementById('search-keyword');
+      const box = document.getElementById('keyword-suggestions');
+      setupSearchSuggestions(input, box, allReports, (item) => {
+        searchForm.dispatchEvent(new Event('submit'));
+      });
+    }
+
+    /**
+     * Recently Viewed Reports (localStorage state)
+     */
+    function logRecentlyViewed(id) {
+      let viewed = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+      viewed = viewed.filter(item => item !== id);
+      viewed.unshift(id);
+      localStorage.setItem('recentlyViewed', JSON.stringify(viewed.slice(0, 3))); // Keep last 3 items
+    }
+
+    async function loadRecentlyViewed() {
+      const viewedIds = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+      if (viewedIds.length === 0) return;
+
+      const section = document.getElementById('recently-viewed-section');
+      const container = document.getElementById('recently-viewed-container');
+      
+      container.innerHTML = '';
+      let renderedCount = 0;
+
+      for (const id of viewedIds) {
+        try {
+          const docRef = doc(db, "reports", id);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists() && docSnap.data().status !== 'pending') {
+            const report = docSnap.data();
+            report.id = docSnap.id;
+
+            const img = report.photos?.[0] || 'https://via.placeholder.com/300x200?text=No+Photo';
+            const typeClass = report.type === 'lost' ? 'type-lost' : 'type-found';
+
+            const card = `
+              <div class="col-md-4">
+                <div class="card glass-card h-100 overflow-hidden">
+                  <div class="card-img-wrapper" style="height: 140px;">
+                    <span class="type-pill ${typeClass}">${report.type}</span>
+                    <img src="${img}" alt="${report.itemName}" loading="lazy">
+                  </div>
+                  <div class="card-body p-3 d-flex flex-column">
+                    <h6 class="card-title text-main fw-bold mb-1">${report.itemName}</h6>
+                    <p class="text-muted small flex-grow-1 mb-2">${report.description.substring(0, 60)}...</p>
+                    <a href="report-details.html?id=${report.id}" class="btn btn-sm btn-custom btn-custom-outline w-100">
+                      View Details
+                    </a>
+                  </div>
+                </div>
+              </div>
+            `;
+            container.insertAdjacentHTML('beforeend', card);
+            renderedCount++;
+          }
+        } catch (err) {
+          console.error("Error fetching recently viewed:", err);
+        }
+      }
+
+      if (renderedCount > 0) {
+        section.classList.remove('d-none');
+      }
+    }
+  </script>
+</body>
+</html>

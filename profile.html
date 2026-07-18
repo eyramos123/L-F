@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - TraceBack</title>
+  
+  <!-- CSS Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Dynamic Header / Navbar -->
+  <header></header>
+
+  <!-- Loader overlay -->
+  <div id="loading-overlay">
+    <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 fs-5 fw-bold text-white" id="loader-text">Loading profile details...</p>
+  </div>
+
+  <main class="container py-5" style="margin-top: 75px;">
+    
+    <div class="row justify-content-center animate-slide-up">
+      <div class="col-lg-8 col-xl-7">
+        
+        <!-- Back Link -->
+        <a href="dashboard.html" class="btn btn-link text-decoration-none text-emerald p-0 mb-3">
+          <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+        
+        <h1 class="fw-extrabold text-main mb-1">Account Profile Settings</h1>
+        <p class="text-muted mb-4">View your registered parameters, update contact details, or upload a custom profile picture.</p>
+
+        <!-- Profile Card -->
+        <div class="card glass-card p-4 shadow-sm border-0">
+          
+          <form id="profile-edit-form" class="row g-4" novalidate>
+            
+            <!-- Avatar Upload Section -->
+            <div class="col-12 text-center py-2">
+              <div class="profile-avatar-wrapper mb-3">
+                <img src="https://via.placeholder.com/130" alt="Profile avatar" class="profile-avatar" id="profile-avatar-img">
+                <label for="profile-avatar-input" class="avatar-edit-label" id="avatar-edit-label" title="Change Avatar">
+                  <i class="bi bi-camera-fill"></i>
+                </label>
+                <input type="file" id="profile-avatar-input" class="d-none" accept="image/*">
+              </div>
+              <h5 class="fw-bold text-main mb-0" id="profile-title-name">User Account</h5>
+              <span class="text-muted small">Customer Account Status: <span class="badge bg-success-subtle text-success">Active</span></span>
+            </div>
+
+            <hr class="my-3 border-secondary opacity-10">
+
+            <!-- Name Input -->
+            <div class="col-md-6">
+              <label for="profile-name" class="form-label fw-semibold text-main">Full Name <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="profile-name" placeholder="e.g. Jane Doe" required>
+              <div class="invalid-feedback">Please enter your name.</div>
+            </div>
+
+            <!-- Email Display (Read-Only) -->
+            <div class="col-md-6">
+              <label for="profile-email" class="form-label fw-semibold text-main">Gmail Address</label>
+              <input type="email" class="form-control bg-body-secondary text-muted" id="profile-email" readonly disabled>
+              <div class="form-text text-muted small">Linked Google Account email. Cannot be modified.</div>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="col-md-6">
+              <label for="profile-phone" class="form-label fw-semibold text-main">Contact Phone Number <span class="text-danger">*</span></label>
+              <input type="tel" class="form-control" id="profile-phone" placeholder="e.g. +1 (555) 019-2834" required>
+              <div class="invalid-feedback">Please enter your phone number.</div>
+            </div>
+
+            <!-- Dark theme helper toggle inside settings card -->
+            <div class="col-md-6 d-flex align-items-center">
+              <div class="form-check form-switch p-0 ps-5">
+                <input class="form-check-input ms-n5 me-2" type="checkbox" role="switch" id="profile-theme-switch" style="width: 2.8em; height: 1.5em; cursor: pointer;">
+                <label class="form-check-label fw-semibold text-main" for="profile-theme-switch" style="cursor: pointer;">Enable Dark Mode</label>
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="col-12 mt-4 pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-end gap-2">
+              <a href="dashboard.html" class="btn btn-custom btn-custom-outline px-4">Cancel</a>
+              <button type="submit" class="btn btn-custom btn-custom-primary px-5">Save Profile Updates</button>
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Dynamic Footer -->
+  <footer></footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script type="module">
+    import "./js/auth.js";
+    import { auth, onAuthStateChanged } from "./js/firebase.js";
+    import { initProfilePage, handleProfileUpdate } from "./js/dashboard.js";
+    import { initTheme, toggleTheme, showToast } from "./js/utils.js";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+
+      const form = document.getElementById("profile-edit-form");
+      const avatarInput = document.getElementById("profile-avatar-input");
+      const avatarImg = document.getElementById("profile-avatar-img");
+      const themeSwitch = document.getElementById("profile-theme-switch");
+
+      // Load Profile Values once user session settles
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          document.getElementById('profile-title-name').textContent = user.displayName;
+          const loaderText = document.getElementById('loader-text');
+          if (loaderText) loaderText.textContent = "Loading profile details...";
+          initProfilePage();
+
+          // Sync theme switch state
+          const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+          themeSwitch.checked = currentTheme === 'dark';
+        }
+      });
+
+      // Handle Instant Avatar Image Preview Selection
+      avatarInput.addEventListener("change", () => {
+        const file = avatarInput.files[0];
+        if (file) {
+          if (!file.type.startsWith('image/')) {
+            showToast("Only image files are allowed.", "danger");
+            return;
+          }
+          if (file.size > 2 * 1024 * 1024) {
+            showToast("Profile image must be under 2MB.", "danger");
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            avatarImg.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Theme toggle binding in settings
+      themeSwitch.addEventListener("change", () => {
+        toggleTheme();
+      });
+
+      // Submit Form
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        // Native Bootstrap check validity
+        if (!form.checkValidity()) {
+          e.stopPropagation();
+          form.classList.add("was-validated");
+          showToast("Please fill in all required inputs.", "danger");
+          return;
+        }
+
+        const loaderText = document.getElementById('loader-text');
+        if (loaderText) loaderText.textContent = "Updating profile details...";
+        handleProfileUpdate(form);
+      });
+    });
+  </script>
+</body>
+</html>

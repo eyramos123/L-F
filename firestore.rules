@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if the user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper function to retrieve user document data
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Helper function to check if the signed-in user is an administrator
+    function isAdmin() {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+             getUserData().role == 'admin';
+    }
+
+    // Helper function to check if the record belongs to the signed-in user
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Helper function to verify that the signed-in user is active (not suspended or banned)
+    function isActiveUser() {
+      return isSignedIn() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+             getUserData().status == 'active';
+    }
+
+    // Users Collection Rules
+    match /users/{userId} {
+      // Any registered user can view other user records (e.g. for reporter details)
+      allow read: if isSignedIn();
+      
+      // A user can create their own account document during signup
+      allow create: if isSignedIn() && isOwner(userId);
+      
+      // A user can edit their own profile fields. They cannot change their own 'role' field
+      // Admin users have full permissions to modify any user document
+      allow update: if isAdmin() || (
+        isOwner(userId) && 
+        request.resource.data.role == resource.data.role && 
+        request.resource.data.status == resource.data.status
+      );
+      
+      // Only admins can delete user documents
+      allow delete: if isAdmin();
+    }
+
+    // Reports Collection Rules
+    match /reports/{reportId} {
+      // Any signed-in user can search and read all reports
+      allow read: if isSignedIn();
+      
+      // Active users can create new lost/found reports, provided they match their own UID
+      allow create: if isActiveUser() && 
+                    request.resource.data.reporterId == request.auth.uid;
+      
+      // Owners can edit their own reports, or admins can edit any report
+      allow update: if isAdmin() || (
+        isActiveUser() && 
+        resource.data.reporterId == request.auth.uid && 
+        request.resource.data.reporterId == request.auth.uid
+      );
+      
+      // Only admins are authorized to delete reports
+      allow delete: if isAdmin();
+    }
+
+    // Notifications Collection Rules
+    match /notifications/{notifId} {
+      // Users can only view, mark read, or delete their own notifications
+      allow read, update, delete: if isSignedIn() && 
+                                   resource.data.userId == request.auth.uid;
+      
+      // Authenticated users or the system can create notifications for any user
+      allow create: if isSignedIn();
+    }
+
+    // Messages Collection Rules
+    match /messages/{messageId} {
+      // Users can only read messages they sent or received
+      allow read: if isSignedIn() && (
+        resource.data.senderId == request.auth.uid || 
+        resource.data.receiverId == request.auth.uid
+      );
+      
+      // Active users can send messages, ensuring the senderId matches their UID
+      allow create: if isActiveUser() && 
+                    request.resource.data.senderId == request.auth.uid;
+      
+      // Messages are immutable once sent
+      allow update, delete: if false;
+    }
+
+    // Activity Logs Collection Rules (Audit Trails)
+    match /activityLogs/{logId} {
+      // Only admins can read activity logs
+      allow read: if isAdmin();
+      
+      // Authenticated users can write log entries when events occur
+      allow create: if isSignedIn() && 
+                    request.resource.data.userId == request.auth.uid;
+      
+      // Activity logs are immutable and cannot be edited or deleted
+      allow update, delete: if false;
+    }
+  }
+}

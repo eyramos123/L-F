@@ -1,0 +1,532 @@
+/* ==========================================================================
+   LOST & FOUND MANAGEMENT SYSTEM - CUSTOM PREMIUM STYLING
+   ========================================================================== */
+
+/* Typography & Core Setup */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-primary: 'Plus Jakarta Sans', sans-serif;
+  
+  /* Light Theme Variables */
+  --primary: #0f172a;
+  --primary-hover: #1e293b;
+  --accent-emerald: #10b981;
+  --accent-emerald-glow: rgba(16, 185, 129, 0.15);
+  --accent-rose: #f43f5e;
+  --accent-rose-glow: rgba(244, 63, 94, 0.15);
+  --accent-amber: #f59e0b;
+  --accent-amber-glow: rgba(245, 158, 11, 0.15);
+  --bg-gradient: radial-gradient(circle at 10% 20%, rgba(242, 245, 250, 1) 0%, rgba(250, 251, 253, 1) 90%);
+  --bg-image: url('../img/background.png');
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --card-border: rgba(226, 232, 240, 0.8);
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --navbar-bg: rgba(255, 255, 255, 0.8);
+  --hero-bg: radial-gradient(ellipse at top, #e2e8f0 0%, #f8fafc 100%);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --primary-btn-text: #ffffff;
+}
+
+[data-bs-theme="dark"] {
+  /* Dark Theme Variables */
+  --primary: #f8fafc;
+  --primary-hover: #cbd5e1;
+  --accent-emerald: #34d399;
+  --accent-emerald-glow: rgba(52, 211, 153, 0.2);
+  --accent-rose: #fb7185;
+  --accent-rose-glow: rgba(251, 113, 133, 0.2);
+  --accent-amber: #fbbf24;
+  --accent-amber-glow: rgba(251, 191, 36, 0.2);
+  --bg-gradient: radial-gradient(circle at 10% 20%, rgba(15, 23, 42, 1) 0%, rgba(9, 15, 29, 1) 90%);
+  --bg-image: linear-gradient(rgba(15, 23, 42, 0.94), rgba(9, 15, 29, 0.94)), url('../img/background.png');
+  --card-bg: rgba(22, 29, 49, 0.65);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --navbar-bg: rgba(9, 15, 29, 0.7);
+  --hero-bg: radial-gradient(ellipse at top, #1e293b 0%, #0f172a 100%);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --input-bg: #1e293b;
+  --input-border: rgba(255, 255, 255, 0.15);
+  --primary-btn-text: #0f172a;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--primary);
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* ==========================================================================
+   GLASSMORPHISM & WRAPPERS
+   ========================================================================== */
+
+.glass-nav {
+  background: var(--navbar-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+}
+
+.glass-card {
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.12);
+}
+
+.glass-footer {
+  background: var(--navbar-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--card-border);
+  margin-top: auto;
+}
+
+/* ==========================================================================
+   HERO & MAIN PAGE SECTIONS
+   ========================================================================== */
+
+.hero-section {
+  background: transparent;
+  padding: 100px 0 80px 0;
+  border-bottom: 1px solid var(--card-border);
+  position: relative;
+}
+
+.hero-title {
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ==========================================================================
+   BUTTONS & INPUTS
+   ========================================================================== */
+
+.btn-custom {
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-custom-primary {
+  background-color: var(--primary);
+  color: var(--primary-btn-text) !important;
+  border: 1px solid var(--primary);
+}
+
+.btn-custom-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-custom-outline {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--text-main);
+}
+
+.btn-custom-outline:hover {
+  background: var(--text-main);
+  color: var(--card-bg) !important;
+}
+
+.form-control, .form-select {
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-main);
+  border-radius: 10px;
+  padding: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--input-bg);
+  color: var(--text-main);
+  border-color: var(--accent-emerald);
+  box-shadow: 0 0 0 4px var(--accent-emerald-glow);
+}
+
+/* ==========================================================================
+   BADGES (STATUS & CATEGORIES)
+   ========================================================================== */
+
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-active {
+  background-color: var(--accent-emerald-glow);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-pending {
+  background-color: var(--accent-amber-glow);
+  color: var(--accent-amber);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-closed {
+  background-color: rgba(100, 116, 139, 0.15);
+  color: var(--text-muted);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.status-claimed, .status-returned {
+  background-color: var(--accent-emerald-glow);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 0 10px var(--accent-emerald-glow);
+}
+
+.status-rejected, .status-suspended, .status-banned {
+  background-color: var(--accent-rose-glow);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+/* ==========================================================================
+   FILE UPLOAD / PREVIEWS
+   ========================================================================== */
+
+.upload-zone {
+  border: 2px dashed var(--input-border);
+  background: rgba(100, 116, 139, 0.02);
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-zone:hover {
+  border-color: var(--accent-emerald);
+  background: var(--accent-emerald-glow);
+}
+
+.preview-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.preview-card {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+}
+
+.preview-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-card .remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(244, 63, 94, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.preview-card .remove-btn:hover {
+  transform: scale(1.15);
+}
+
+/* ==========================================================================
+   IMAGE GALLERIES & LAZY CARDS
+   ========================================================================== */
+
+.card-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: rgba(100, 116, 139, 0.08);
+}
+
+.card-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.glass-card:hover .card-img-wrapper img {
+  transform: scale(1.05);
+}
+
+.type-pill {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.type-lost {
+  background: var(--accent-rose);
+  color: white;
+}
+
+.type-found {
+  background: var(--accent-emerald);
+  color: white;
+}
+
+/* ==========================================================================
+   ANIMATIONS & TRANSITIONS
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ==========================================================================
+   PROFILE PAGE SECTIONS
+   ========================================================================== */
+
+.profile-avatar-wrapper {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--card-bg);
+  box-shadow: var(--glass-shadow);
+}
+
+.avatar-edit-label {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--accent-emerald);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+}
+
+.avatar-edit-label:hover {
+  transform: scale(1.1);
+}
+
+/* ==========================================================================
+   LOADING OVERLAY & TOASTS
+   ========================================================================== */
+
+#loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(9, 15, 29, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#loading-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.toast-container {
+  z-index: 1060;
+}
+
+/* ==========================================================================
+   SUGGESTIONS & MAPS INTEGRATION
+   ========================================================================== */
+
+.search-suggestion-box {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 0 0 10px 10px;
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.search-suggestion-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  color: var(--text-main);
+}
+
+.search-suggestion-item:hover {
+  background: var(--card-border);
+}
+
+/* Gallery Modal & Thumbnails */
+.details-thumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.details-thumb.active {
+  border-color: var(--accent-emerald);
+  transform: scale(1.05);
+}
+
+/* ==========================================================================
+   DARK MODE TOGGLE BUTTON
+   ========================================================================== */
+
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(148, 163, 184, 0.15);
+}
+
+/* Statistics and Dashboard Overrides */
+.stat-card {
+  padding: 24px;
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+  opacity: 0.85;
+}
+
+.activity-feed-item {
+  border-left: 2px solid var(--card-border);
+  padding-left: 20px;
+  position: relative;
+}
+
+.activity-feed-item::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  border: 2px solid var(--card-bg);
+}
+
+.activity-feed-item.danger::before {
+  background: var(--accent-rose);
+}
+
+.activity-feed-item.warning::before {
+  background: var(--accent-amber);
+}
