@@ -228,7 +228,7 @@ function initThemeToggleAction() {
    SPINNER LOADER OVERLAY
    ========================================================================== */
 
-export function showLoader() {
+export function showLoader(customText = "Loading, please wait...") {
   let loader = document.getElementById('loading-overlay');
   if (!loader) {
     loader = document.createElement('div');
@@ -237,9 +237,14 @@ export function showLoader() {
       <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
-      <p class="mt-3 fs-5 fw-bold text-white">Loading, please wait...</p>
+      <p class="mt-3 fs-5 fw-bold text-white" id="loader-text">${customText}</p>
     `;
     document.body.appendChild(loader);
+  } else {
+    const label = loader.querySelector('#loader-text');
+    if (label) {
+      label.textContent = customText;
+    }
   }
   loader.classList.add('active');
 }
@@ -511,3 +516,69 @@ export async function logActivity(actionType, description) {
     console.error("Error logging activity: ", err);
   }
 }
+
+/**
+ * Compresses an image file on the client-side using Canvas and outputs a Base64 data URL.
+ * Bypasses the need for Firebase Storage.
+ */
+export function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    // Setup safety timeout to avoid hanging the promise
+    const timeoutId = setTimeout(() => {
+      reject(new Error("Image compression timed out"));
+    }, 4000);
+
+    const cleanup = () => clearTimeout(timeoutId);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            throw new Error("Could not get 2D context");
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Convert canvas to base64 data URL with JPEG quality compression
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          cleanup();
+          resolve(dataUrl);
+        } catch (err) {
+          cleanup();
+          reject(err);
+        }
+      };
+      img.onerror = (err) => {
+        cleanup();
+        reject(err);
+      };
+      img.src = event.target.result;
+    };
+    reader.onerror = (err) => {
+      cleanup();
+      reject(err);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+

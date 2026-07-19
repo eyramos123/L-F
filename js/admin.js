@@ -472,16 +472,18 @@ async function deleteReport(reportId, itemName) {
       if (docSnap.exists()) {
         const report = docSnap.data();
         
-        // 1. Delete associated images from Firebase Storage
+        // 1. Delete associated images from Firebase Storage if they are hosted URLs
         if (report.photos && report.photos.length > 0) {
           for (const url of report.photos) {
-            try {
-              // Parse photo filename from URL to delete it
-              // Firebase URLs contain name segments that can be decoded, or delete via exact reference
-              const photoRef = ref(storage, url);
-              await deleteObject(photoRef);
-            } catch (err) {
-              console.warn("Storage deletion warning (might already be deleted or outside bucket):", err);
+            if (url && url.startsWith('http')) {
+              try {
+                // Parse photo filename from URL to delete it
+                // Firebase URLs contain name segments that can be decoded, or delete via exact reference
+                const photoRef = ref(storage, url);
+                await deleteObject(photoRef);
+              } catch (err) {
+                console.warn("Storage deletion warning (might already be deleted or outside bucket):", err);
+              }
             }
           }
         }

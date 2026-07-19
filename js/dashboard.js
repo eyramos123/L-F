@@ -7,7 +7,6 @@
 
 import { 
   db, 
-  storage, 
   auth, 
   doc, 
   getDoc, 
@@ -15,10 +14,7 @@ import {
   collection, 
   query, 
   where, 
-  getDocs, 
-  ref, 
-  uploadBytes, 
-  getDownloadURL 
+  getDocs 
 } from "./firebase.js";
 import { 
   showToast, 
@@ -26,7 +22,8 @@ import {
   hideLoader, 
   formatDate, 
   timeAgo,
-  logActivity 
+  logActivity,
+  compressImage
 } from "./utils.js";
 
 /**
@@ -421,18 +418,20 @@ export async function handleProfileUpdate(formEl) {
     const userDocRef = doc(db, "users", user.uid);
     let avatarUrl = user.photoURL;
 
-    // Upload new profile avatar if selected
+    // Compress and convert new profile avatar if selected
     if (avatarFile) {
-      // Validate File size (2MB limit for profiles)
-      if (avatarFile.size > 2 * 1024 * 1024) {
-        showToast("Profile pictures must be under 2MB.", "warning");
-        hideLoader();
-        return;
+      try {
+        // Compress profile picture to a smaller size (e.g. 300x300) for profile avatar
+        avatarUrl = await compressImage(avatarFile, 300, 300, 0.7);
+      } catch (compressErr) {
+        console.error("Error compressing profile avatar, using base64 fallback:", compressErr);
+        avatarUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(avatarFile);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (err) => reject(err);
+        });
       }
-      
-      const storageRef = ref(storage, `profiles/${user.uid}/${Date.now()}_${avatarFile.name}`);
-      const uploadResult = await uploadBytes(storageRef, avatarFile);
-      avatarUrl = await getDownloadURL(uploadResult.ref);
     }
 
     // Update Firestore Document

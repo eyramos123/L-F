@@ -7,16 +7,12 @@
 
 import { 
   db, 
-  storage, 
   collection, 
   doc, 
   getDoc, 
   addDoc, 
   setDoc,
   updateDoc, 
-  ref, 
-  uploadBytes, 
-  getDownloadURL, 
   increment,
   auth
 } from "./firebase.js";
@@ -29,7 +25,8 @@ import {
   createNotification, 
   isBookmarked, 
   toggleBookmark,
-  logActivity 
+  logActivity,
+  compressImage
 } from "./utils.js";
 
 // Temp storage for files selected in form prior to submission
@@ -174,21 +171,38 @@ export async function handleReportSubmission(formEl, type) {
   if (submitBtn) submitBtn.disabled = true;
 
   try {
+    console.log("--- Starting Report Submission ---");
+    console.log("User details:", { uid: user.uid, email: user.email, displayName: user.displayName });
+    
     // 1. Create Firestore Document ID first (to reference in Storage path)
     const reportRef = doc(collection(db, "reports"));
     const reportId = reportRef.id;
+    console.log("Generated report ID:", reportId);
 
-    // 2. Upload images in parallel
+    // 2. Compress and convert images to Base64
     const photoUrls = [];
     for (let i = 0; i < selectedFiles.length; i++) {
       const file = selectedFiles[i];
-      const filename = `${Date.now()}_${i}_${file.name}`;
-      const storageRef = ref(storage, `reports/${reportId}/${filename}`);
-      
-      const uploadResult = await uploadBytes(storageRef, file);
-      const downloadUrl = await getDownloadURL(uploadResult.ref);
-      photoUrls.push(downloadUrl);
+      console.log(`Processing file ${i + 1}/${selectedFiles.length}: ${file.name} (original size: ${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+      try {
+        console.log(`Compressing ${file.name}...`);
+        const compressedBase64 = await compressImage(file);
+        console.log(`Successfully compressed ${file.name}. Base64 size: ${(compressedBase64.length / 1024).toFixed(2)} KB`);
+        photoUrls.push(compressedBase64);
+      } catch (compressErr) {
+        console.error(`Error compressing image ${file.name}, using raw base64 fallback:`, compressErr);
+        const base64Fallback = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (err) => reject(err);
+        });
+        console.log(`Raw base64 fallback loaded. Size: ${(base64Fallback.length / 1024).toFixed(2)} KB`);
+        photoUrls.push(base64Fallback);
+      }
     }
+
+    console.log("All photos ready. Count:", photoUrls.length);
 
     // 3. Assemble document payload
     const payload = {
@@ -218,7 +232,9 @@ export async function handleReportSubmission(formEl, type) {
     };
 
     // 4. Write document to Cloud Firestore
+    console.log("Writing payload to Cloud Firestore...", payload);
     await setDoc(reportRef, payload);
+    console.log("Firestore write succeeded!");
     
     // Log user activity
     await logActivity("create_report", `Reported ${type} item: ${itemName} (${reportId})`);
