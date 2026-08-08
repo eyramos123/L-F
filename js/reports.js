@@ -865,4 +865,3 @@ function formatChatTime(date) {
   const d = (date instanceof Date) ? date : new Date(date);
   return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 }
-}
