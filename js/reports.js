@@ -593,7 +593,8 @@ async function renderMessagingSection(report) {
       const chats = {}; // userId -> { userName: string, messages: [] }
       messages.forEach(msg => {
         const otherId = msg.senderId === currentUser.uid ? msg.receiverId : msg.senderId;
-        const otherName = msg.senderId === currentUser.uid ? (msg.receiverName || "Finder/Claimant") : msg.senderName;
+        if (!otherId) return; // Skip if other ID is missing
+        const otherName = msg.senderId === currentUser.uid ? (msg.receiverName || "Finder/Claimant") : (msg.senderName || "User");
         if (!chats[otherId]) {
           chats[otherId] = {
             userId: otherId,
@@ -637,10 +638,10 @@ async function renderMessagingSection(report) {
         conversationSidebarHTML += `
           <div class="conversation-item ${isActive}" data-user-id="${chat.userId}">
             <div class="rounded-circle bg-emerald text-white d-flex align-items-center justify-content-center border" style="width: 38px; height: 38px; font-weight: bold; flex-shrink: 0;">
-              ${chat.userName.charAt(0).toUpperCase()}
+              ${(chat.userName || "User").charAt(0).toUpperCase()}
             </div>
             <div class="overflow-hidden">
-              <h6 class="mb-0 text-main small fw-bold">${chat.userName}</h6>
+              <h6 class="mb-0 text-main small fw-bold">${chat.userName || "User"}</h6>
               <p class="text-muted mb-0 small text-truncate" style="font-size: 0.75rem;">${snippet}</p>
             </div>
           </div>
@@ -675,9 +676,9 @@ async function renderMessagingSection(report) {
               <div class="chat-container">
                 <div class="chat-header text-main fw-bold small d-flex align-items-center gap-2">
                   <div class="rounded-circle bg-emerald text-white d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 0.8rem; font-weight: bold;">
-                    ${activeChat.userName.charAt(0).toUpperCase()}
+                    ${(activeChat.userName || "User").charAt(0).toUpperCase()}
                   </div>
-                  <span>Chat with ${activeChat.userName}</span>
+                  <span>Chat with ${activeChat.userName || "User"}</span>
                 </div>
                 <div class="chat-history" id="chat-history-pane">
                   ${chatHistoryHTML}
@@ -770,9 +771,9 @@ async function renderMessagingSection(report) {
               <div class="d-flex align-items-center gap-3">
                 <img src="${report.reporterPhoto || 'https://via.placeholder.com/60'}" alt="Reporter avatar" class="rounded-circle border" width="60" height="60">
                 <div>
-                  <h6 class="mb-1 text-main fw-bold">${report.reporterName}</h6>
-                  <span class="text-muted d-block small mb-1"><i class="bi bi-envelope-fill me-1"></i> ${report.reporterEmail}</span>
-                  <span class="text-muted d-block small"><i class="bi bi-telephone-fill me-1"></i> ${report.contactNumber}</span>
+                  <h6 class="mb-1 text-main fw-bold">${report.reporterName || 'Unknown Reporter'}</h6>
+                  <span class="text-muted d-block small mb-1"><i class="bi bi-envelope-fill me-1"></i> ${report.reporterEmail || 'N/A'}</span>
+                  <span class="text-muted d-block small"><i class="bi bi-telephone-fill me-1"></i> ${report.contactNumber || 'N/A'}</span>
                 </div>
               </div>
             </div>
@@ -782,9 +783,9 @@ async function renderMessagingSection(report) {
               <div class="chat-container">
                 <div class="chat-header text-main fw-bold small d-flex align-items-center gap-2">
                   <div class="rounded-circle bg-emerald text-white d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 0.8rem; font-weight: bold;">
-                    ${report.reporterName.charAt(0).toUpperCase()}
+                    ${(report.reporterName || "Unknown").charAt(0).toUpperCase()}
                   </div>
-                  <span>Chat with ${report.reporterName}</span>
+                  <span>Chat with ${report.reporterName || "Unknown Reporter"}</span>
                 </div>
                 <div class="chat-history" id="chat-history-pane">
                   ${chatHistoryHTML.length > 0 ? chatHistoryHTML : `
@@ -862,6 +863,19 @@ async function renderMessagingSection(report) {
 
 function formatChatTime(date) {
   if (!date) return '';
-  const d = (date instanceof Date) ? date : new Date(date);
-  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  try {
+    let d;
+    if (typeof date.toDate === 'function') {
+      d = date.toDate();
+    } else if (date.seconds) {
+      d = new Date(date.seconds * 1000);
+    } else {
+      d = (date instanceof Date) ? date : new Date(date);
+    }
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } catch (err) {
+    console.error("formatChatTime error: ", err);
+    return '';
+  }
 }

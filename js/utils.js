@@ -463,17 +463,54 @@ export async function isBookmarked(reportId) {
 
 export function formatDate(dateStr) {
   if (!dateStr) return 'N/A';
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  return new Date(dateStr).toLocaleDateString('en-US', options);
+  try {
+    let date;
+    if (typeof dateStr.toDate === 'function') {
+      date = dateStr.toDate();
+    } else if (dateStr.seconds) {
+      date = new Date(dateStr.seconds * 1000);
+    } else {
+      date = new Date(dateStr);
+    }
+    if (isNaN(date.getTime())) return 'N/A';
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  } catch (err) {
+    console.error("formatDate error: ", err);
+    return 'N/A';
+  }
 }
 
 export function formatTime(timeStr) {
   if (!timeStr) return 'N/A';
-  const [hours, minutes] = timeStr.split(':');
-  const h = parseInt(hours);
-  const ampm = h >= 12 ? 'PM' : 'AM';
-  const hh = h % 12 || 12;
-  return `${hh}:${minutes} ${ampm}`;
+  try {
+    let date;
+    if (typeof timeStr.toDate === 'function') {
+      date = timeStr.toDate();
+    } else if (timeStr.seconds) {
+      date = new Date(timeStr.seconds * 1000);
+    } else if (typeof timeStr === 'string' && timeStr.includes(':')) {
+      const [hours, minutes] = timeStr.split(':');
+      const h = parseInt(hours);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const hh = h % 12 || 12;
+      return `${hh}:${minutes} ${ampm}`;
+    } else {
+      date = new Date(timeStr);
+    }
+    
+    if (date && !isNaN(date.getTime())) {
+      const hours = date.getHours();
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const hh = hours % 12 || 12;
+      return `${hh}:${minutes} ${ampm}`;
+    }
+    return 'N/A';
+  } catch (err) {
+    console.error("formatTime error: ", err);
+    return 'N/A';
+  }
 }
 
 export function timeAgo(timestamp) {
