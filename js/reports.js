@@ -14,7 +14,11 @@ import {
   setDoc,
   updateDoc, 
   increment,
-  auth
+  auth,
+  query,
+  where,
+  orderBy,
+  getDocs
 } from "./firebase.js";
 import { 
   showToast, 
@@ -435,35 +439,9 @@ function renderReportDetailsUI(report) {
         </div>
       </div>
       
-      <!-- Reporter Information & Direct Message -->
-      <div class="col-12 mt-4">
-        <div class="glass-card p-4">
-          <div class="row align-items-center g-4">
-            <div class="col-md-5 border-end border-secondary border-opacity-10">
-              <h5 class="fw-bold text-main mb-3">Reporter Profile</h5>
-              <div class="d-flex align-items-center gap-3">
-                <img src="${report.reporterPhoto || 'https://via.placeholder.com/60'}" alt="Reporter avatar" class="rounded-circle border" width="60" height="60">
-                <div>
-                  <h6 class="mb-1 text-main fw-bold">${report.reporterName}</h6>
-                  <span class="text-muted d-block small mb-1"><i class="bi bi-envelope-fill me-1"></i> ${report.reporterEmail}</span>
-                  <span class="text-muted d-block small"><i class="bi bi-telephone-fill me-1"></i> ${report.contactNumber}</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-7">
-              <h5 class="fw-bold text-main mb-3">Send a Direct Message</h5>
-              <form id="details-contact-form">
-                <div class="input-group">
-                  <textarea class="form-control" placeholder="Write a message to contact the reporter..." rows="2" id="contact-message-text" required></textarea>
-                  <button type="submit" class="btn btn-custom btn-custom-primary d-flex align-items-center justify-content-center px-4" id="btn-send-message">
-                    <i class="bi bi-send-fill fs-5"></i>
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+      <!-- Reporter Information & Direct Message Chat -->
+      <div class="col-12 mt-4" id="messaging-section-container">
+        <!-- populated dynamically by renderMessagingSection -->
       </div>
     </div>
   `;
@@ -537,50 +515,349 @@ function renderReportDetailsUI(report) {
     }
   });
 
-  // 5. Message Submission Handler
-  const contactForm = document.getElementById('details-contact-form');
-  contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const user = auth.currentUser;
-    if (!user) {
-      showToast("Please log in to send messages.", "warning");
-      return;
-    }
+  // 5. Setup Direct Messaging Section
+  renderMessagingSection(report);
+}
 
-    if (user.uid === report.reporterId) {
-      showToast("You cannot message yourself.", "warning");
-      return;
-    }
+// ==========================================================================
+// MESSAGE / CHAT SYSTEM FOR REPORT DETAILS
+// ==========================================================================
+async function renderMessagingSection(report) {
+  const container = document.getElementById('messaging-section-container');
+  if (!container) return;
 
-    const messageText = document.getElementById('contact-message-text').value.trim();
-    if (!messageText) return;
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    container.innerHTML = `
+      <div class="glass-card p-4 text-center">
+        <h5 class="fw-bold text-main mb-2">Direct Messages Center</h5>
+        <p class="text-muted mb-3">Please log in to contact the reporter or view message logs.</p>
+        <a href="login.html" class="btn btn-custom btn-custom-primary px-4"><i class="bi bi-shield-lock-fill me-2"></i> Log In to Access</a>
+      </div>
+    `;
+    return;
+  }
 
-    showLoader();
-    try {
-      // Create message document
-      await addDoc(collection(db, "messages"), {
-        reportId: report.id,
-        senderId: user.uid,
-        senderName: user.displayName,
-        receiverId: report.reporterId,
-        messageText: messageText,
-        createdAt: new Date()
+  const isOwner = currentUser.uid === report.reporterId;
+
+  container.innerHTML = `
+    <div class="glass-card p-4">
+      <div class="text-center py-4 text-muted">
+        <div class="spinner-border text-emerald mb-2" role="status"></div>
+        <p class="mb-0">Loading messaging workspace...</p>
+      </div>
+    </div>
+  `;
+
+  try {
+    // 1. Fetch related messages (merged queries for strict rules validation)
+    const q1 = query(
+      collection(db, "messages"),
+      where("reportId", "==", report.id),
+      where("senderId", "==", currentUser.uid)
+    );
+    const q2 = query(
+      collection(db, "messages"),
+      where("reportId", "==", report.id),
+      where("receiverId", "==", currentUser.uid)
+    );
+
+    const [snap1, snap2] = await Promise.all([getDocs(q1), getDocs(q2)]);
+
+    const msgMap = new Map();
+    snap1.forEach(doc => {
+      const d = doc.data();
+      d.id = doc.id;
+      msgMap.set(d.id, d);
+    });
+    snap2.forEach(doc => {
+      const d = doc.data();
+      d.id = doc.id;
+      msgMap.set(d.id, d);
+    });
+
+    const messages = Array.from(msgMap.values());
+    messages.sort((a, b) => {
+      const tA = a.createdAt?.seconds || 0;
+      const tB = b.createdAt?.seconds || 0;
+      return tA - tB;
+    });
+
+    if (isOwner) {
+      // 2a. Reporter View: Group messages by the other participant
+      const chats = {}; // userId -> { userName: string, messages: [] }
+      messages.forEach(msg => {
+        const otherId = msg.senderId === currentUser.uid ? msg.receiverId : msg.senderId;
+        const otherName = msg.senderId === currentUser.uid ? (msg.receiverName || "Finder/Claimant") : msg.senderName;
+        if (!chats[otherId]) {
+          chats[otherId] = {
+            userId: otherId,
+            userName: otherName,
+            messages: []
+          };
+        }
+        chats[otherId].messages.push(msg);
       });
 
-      // Send alert notification to the reporter
-      await createNotification(
-        report.reporterId,
-        `New Message: ${report.itemName}`,
-        `${user.displayName} sent a message: "${messageText.substring(0, 40)}${messageText.length > 40 ? '...' : ''}"`,
-        `report-details.html?id=${report.id}`
-      );
+      const chatList = Object.values(chats);
 
-      showToast("Message sent successfully! The reporter has been notified.", "success");
-      document.getElementById('contact-message-text').value = '';
-    } catch (err) {
-      showToast(err.message, "danger");
-    } finally {
-      hideLoader();
+      if (chatList.length === 0) {
+        container.innerHTML = `
+          <div class="glass-card p-4">
+            <h5 class="fw-bold text-main mb-3">Direct Messages (Reporter Hub)</h5>
+            <div class="text-center py-5 border border-dashed border-secondary border-opacity-15 rounded bg-body-tertiary">
+              <i class="bi bi-chat-left-dots text-muted fs-2 mb-2 d-block"></i>
+              <h6 class="text-main fw-bold">No Messages Received</h6>
+              <p class="text-muted small mb-0 px-3">When finders or claimants message you about this item, they will appear here.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Read active conversation from sessionStorage, fallback to first active chat
+      let activeUserId = sessionStorage.getItem(`active_chat_${report.id}`) || chatList[0].userId;
+      if (!chats[activeUserId]) {
+        activeUserId = chatList[0].userId;
+      }
+      sessionStorage.setItem(`active_chat_${report.id}`, activeUserId);
+
+      const activeChat = chats[activeUserId];
+
+      let conversationSidebarHTML = '';
+      chatList.forEach(chat => {
+        const isActive = chat.userId === activeUserId ? 'active' : '';
+        const lastMsg = chat.messages[chat.messages.length - 1];
+        const snippet = lastMsg ? (lastMsg.messageText.substring(0, 30) + (lastMsg.messageText.length > 30 ? '...' : '')) : '';
+        conversationSidebarHTML += `
+          <div class="conversation-item ${isActive}" data-user-id="${chat.userId}">
+            <div class="rounded-circle bg-emerald text-white d-flex align-items-center justify-content-center border" style="width: 38px; height: 38px; font-weight: bold; flex-shrink: 0;">
+              ${chat.userName.charAt(0).toUpperCase()}
+            </div>
+            <div class="overflow-hidden">
+              <h6 class="mb-0 text-main small fw-bold">${chat.userName}</h6>
+              <p class="text-muted mb-0 small text-truncate" style="font-size: 0.75rem;">${snippet}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      let chatHistoryHTML = '';
+      activeChat.messages.forEach(msg => {
+        const isSentByMe = msg.senderId === currentUser.uid;
+        const bubbleClass = isSentByMe ? 'sent' : 'received';
+        const metaClass = isSentByMe ? 'sent' : 'received';
+        const timeStr = msg.createdAt ? formatChatTime(typeof msg.createdAt.toDate === 'function' ? msg.createdAt.toDate() : new Date(msg.createdAt)) : '';
+        chatHistoryHTML += `
+          <div class="chat-bubble ${bubbleClass}">
+            <span class="d-block">${msg.messageText}</span>
+            <span class="chat-meta ${metaClass}">${timeStr}</span>
+          </div>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="glass-card p-4">
+          <h5 class="fw-bold text-main mb-4"><i class="bi bi-chat-dots-fill text-emerald me-2"></i> Direct Messages Workspace</h5>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <h6 class="text-muted small fw-bold mb-2">Incoming Inquiries</h6>
+              <div class="conversation-list">
+                ${conversationSidebarHTML}
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="chat-container">
+                <div class="chat-header text-main fw-bold small d-flex align-items-center gap-2">
+                  <div class="rounded-circle bg-emerald text-white d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 0.8rem; font-weight: bold;">
+                    ${activeChat.userName.charAt(0).toUpperCase()}
+                  </div>
+                  <span>Chat with ${activeChat.userName}</span>
+                </div>
+                <div class="chat-history" id="chat-history-pane">
+                  ${chatHistoryHTML}
+                </div>
+                <form class="chat-input-area" id="owner-reply-form">
+                  <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" id="reply-message-text" placeholder="Type your reply..." required autocomplete="off">
+                    <button type="submit" class="btn btn-custom btn-custom-primary btn-sm px-3 d-flex align-items-center justify-content-center">
+                      <i class="bi bi-send-fill"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Attach sidebar click handlers
+      const sidebarItems = container.querySelectorAll('.conversation-item');
+      sidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const clickedUid = item.getAttribute('data-user-id');
+          sessionStorage.setItem(`active_chat_${report.id}`, clickedUid);
+          renderMessagingSection(report);
+        });
+      });
+
+      // Scroll to bottom
+      const pane = document.getElementById('chat-history-pane');
+      if (pane) pane.scrollTop = pane.scrollHeight;
+
+      // Handle reply submit
+      const replyForm = document.getElementById('owner-reply-form');
+      replyForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const textEl = document.getElementById('reply-message-text');
+        const text = textEl.value.trim();
+        if (!text) return;
+
+        showLoader();
+        try {
+          await addDoc(collection(db, "messages"), {
+            reportId: report.id,
+            senderId: currentUser.uid,
+            senderName: currentUser.displayName,
+            receiverId: activeChat.userId,
+            receiverName: activeChat.userName,
+            messageText: text,
+            createdAt: new Date()
+          });
+
+          await createNotification(
+            activeChat.userId,
+            `Reply: ${report.itemName}`,
+            `${currentUser.displayName} replied: "${text.substring(0, 40)}${text.length > 40 ? '...' : ''}"`,
+            `report-details.html?id=${report.id}`
+          );
+
+          textEl.value = '';
+          await renderMessagingSection(report);
+        } catch (err) {
+          showToast(err.message, "danger");
+        } finally {
+          hideLoader();
+        }
+      });
+
+    } else {
+      // 2b. Interested User View: Chat history with the reporter + Send message form
+      let chatHistoryHTML = '';
+      messages.forEach(msg => {
+        const isSentByMe = msg.senderId === currentUser.uid;
+        const bubbleClass = isSentByMe ? 'sent' : 'received';
+        const metaClass = isSentByMe ? 'sent' : 'received';
+        const timeStr = msg.createdAt ? formatChatTime(typeof msg.createdAt.toDate === 'function' ? msg.createdAt.toDate() : new Date(msg.createdAt)) : '';
+        chatHistoryHTML += `
+          <div class="chat-bubble ${bubbleClass}">
+            <span class="d-block">${msg.messageText}</span>
+            <span class="chat-meta ${metaClass}">${timeStr}</span>
+          </div>
+        `;
+      });
+
+      container.innerHTML = `
+        <div class="glass-card p-4">
+          <div class="row align-items-center g-4">
+            <div class="col-md-5 border-end border-secondary border-opacity-10">
+              <h5 class="fw-bold text-main mb-3">Reporter Profile</h5>
+              <div class="d-flex align-items-center gap-3">
+                <img src="${report.reporterPhoto || 'https://via.placeholder.com/60'}" alt="Reporter avatar" class="rounded-circle border" width="60" height="60">
+                <div>
+                  <h6 class="mb-1 text-main fw-bold">${report.reporterName}</h6>
+                  <span class="text-muted d-block small mb-1"><i class="bi bi-envelope-fill me-1"></i> ${report.reporterEmail}</span>
+                  <span class="text-muted d-block small"><i class="bi bi-telephone-fill me-1"></i> ${report.contactNumber}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-7">
+              <h5 class="fw-bold text-main mb-3">Direct Messaging</h5>
+              <div class="chat-container">
+                <div class="chat-header text-main fw-bold small d-flex align-items-center gap-2">
+                  <div class="rounded-circle bg-emerald text-white d-flex align-items-center justify-content-center" style="width: 28px; height: 28px; font-size: 0.8rem; font-weight: bold;">
+                    ${report.reporterName.charAt(0).toUpperCase()}
+                  </div>
+                  <span>Chat with ${report.reporterName}</span>
+                </div>
+                <div class="chat-history" id="chat-history-pane">
+                  ${chatHistoryHTML.length > 0 ? chatHistoryHTML : `
+                    <div class="text-center py-5 text-muted my-auto">
+                      <i class="bi bi-chat-left-dots-fill text-muted fs-3 mb-2 d-block"></i>
+                      <p class="small mb-0">No message history yet. Write a message below to contact the reporter.</p>
+                    </div>
+                  `}
+                </div>
+                <form class="chat-input-area" id="details-contact-form">
+                  <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" id="contact-message-text" placeholder="Write a message to contact the reporter..." required autocomplete="off">
+                    <button type="submit" class="btn btn-custom btn-custom-primary btn-sm px-3 d-flex align-items-center justify-content-center" id="btn-send-message">
+                      <i class="bi bi-send-fill"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Scroll to bottom
+      const pane = document.getElementById('chat-history-pane');
+      if (pane) pane.scrollTop = pane.scrollHeight;
+
+      // Handle message submission
+      const contactForm = document.getElementById('details-contact-form');
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const textEl = document.getElementById('contact-message-text');
+        const text = textEl.value.trim();
+        if (!text) return;
+
+        showLoader();
+        try {
+          await addDoc(collection(db, "messages"), {
+            reportId: report.id,
+            senderId: currentUser.uid,
+            senderName: currentUser.displayName,
+            receiverId: report.reporterId,
+            receiverName: report.reporterName,
+            messageText: text,
+            createdAt: new Date()
+          });
+
+          await createNotification(
+            report.reporterId,
+            `New Message: ${report.itemName}`,
+            `${currentUser.displayName} sent a message: "${text.substring(0, 40)}${text.length > 40 ? '...' : ''}"`,
+            `report-details.html?id=${report.id}`
+          );
+
+          textEl.value = '';
+          await renderMessagingSection(report);
+        } catch (err) {
+          showToast(err.message, "danger");
+        } finally {
+          hideLoader();
+        }
+      });
     }
-  });
+
+  } catch (err) {
+    console.error("Error loading chat:", err);
+    container.innerHTML = `
+      <div class="glass-card p-4 text-center">
+        <h5 class="fw-bold text-danger mb-2">Error Loading Chat</h5>
+        <p class="text-muted mb-0">${err.message}</p>
+      </div>
+    `;
+  }
+}
+
+function formatChatTime(date) {
+  if (!date) return '';
+  const d = (date instanceof Date) ? date : new Date(date);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
 }

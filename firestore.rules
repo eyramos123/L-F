@@ -31,15 +31,36 @@ service cloud.firestore {
              getUserData().status == 'active';
     }
 
+    // Helper to check if a photo string is valid (Base64 data URL under ~250KB, or a remote http/https URL)
+    function isValidPhoto(photo) {
+      return photo is string && 
+             (photo.matches('^data:image/.*') || photo.matches('^https?:\\/\\/.*')) &&
+             photo.size() < 350000;
+    }
+
+    // Helper to validate a list of photos (max 5 items, each must be a valid photo)
+    function isValidPhotoList(photos) {
+      return photos is list && 
+             photos.size() <= 5 && 
+             (photos.size() < 1 || isValidPhoto(photos[0])) &&
+             (photos.size() < 2 || isValidPhoto(photos[1])) &&
+             (photos.size() < 3 || isValidPhoto(photos[2])) &&
+             (photos.size() < 4 || isValidPhoto(photos[3])) &&
+             (photos.size() < 5 || isValidPhoto(photos[4]));
+    }
+
     // Users Collection Rules
     match /users/{userId} {
       // Any registered user can view other user records (e.g. for reporter details)
       allow read: if isSignedIn();
       
       // A user can create their own account document during signup
-      allow create: if isSignedIn() && isOwner(userId);
+      // Must ensure they set their role to 'customer' and status to 'active'
+      allow create: if isSignedIn() && isOwner(userId) && 
+                    request.resource.data.role == 'customer' && 
+                    request.resource.data.status == 'active';
       
-      // A user can edit their own profile fields. They cannot change their own 'role' field
+      // A user can edit their own profile fields. They cannot change their own 'role' or 'status' fields
       // Admin users have full permissions to modify any user document
       allow update: if isAdmin() || (
         isOwner(userId) && 
@@ -56,15 +77,21 @@ service cloud.firestore {
       // Any signed-in user can search and read all reports
       allow read: if isSignedIn();
       
-      // Active users can create new lost/found reports, provided they match their own UID
+      // Active users can create new lost/found reports
+      // - Must match their own UID
+      // - Must start with 'pending' status
+      // - Must validate photo attachments (max 5, size limits)
       allow create: if isActiveUser() && 
-                    request.resource.data.reporterId == request.auth.uid;
+                    request.resource.data.reporterId == request.auth.uid &&
+                    request.resource.data.status == 'pending' &&
+                    isValidPhotoList(request.resource.data.photos);
       
-      // Owners can edit their own reports, or admins can edit any report
+      // Owners can edit their own reports (but cannot change reporterId), or admins can edit any report
       allow update: if isAdmin() || (
         isActiveUser() && 
         resource.data.reporterId == request.auth.uid && 
-        request.resource.data.reporterId == request.auth.uid
+        request.resource.data.reporterId == request.auth.uid &&
+        isValidPhotoList(request.resource.data.photos)
       );
       
       // Only admins are authorized to delete reports

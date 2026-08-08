@@ -5,7 +5,7 @@
  * ==========================================================================
  */
 
-import { auth, db, doc, getDoc, updateDoc, collection, query, where, orderBy, getDocs, limit } from "./firebase.js";
+import { auth, db, doc, getDoc, updateDoc, collection, query, where, orderBy, getDocs, limit, addDoc } from "./firebase.js";
 
 /* ==========================================================================
    THEME CONTROLLER (LIGHT/DARK)
