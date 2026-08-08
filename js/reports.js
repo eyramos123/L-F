@@ -285,11 +285,16 @@ export async function loadReportDetails(reportId) {
     }
 
     const report = reportSnap.data();
+    report.id = reportSnap.id;
     
     // Log view increments if current user is not the owner
     const currentUser = auth.currentUser;
     if (currentUser && currentUser.uid !== report.reporterId) {
-      await updateDoc(reportDocRef, { views: increment(1) });
+      try {
+        await updateDoc(reportDocRef, { views: increment(1) });
+      } catch (viewErr) {
+        console.warn("Could not increment views due to permissions/rules:", viewErr);
+      }
     }
 
     // Render HTML details
