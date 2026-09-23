@@ -347,7 +347,7 @@ function renderReportDetailsUI(report) {
   let thumbnailsHTML = '';
   
   if (report.photos && report.photos.length > 0) {
-    mainPhotoHTML = `<img src="${report.photos[0]}" alt="${report.itemName}" class="img-fluid w-100 rounded-3" id="details-main-img" style="max-height: 450px; object-fit: contain; background: #000;">`;
+    mainPhotoHTML = `<img src="${report.photos[0]}" alt="${report.itemName}" class="img-fluid instagram-photo" id="details-main-img">`;
     
     if (report.photos.length > 1) {
       thumbnailsHTML = `<div class="d-flex flex-wrap gap-2 mt-3">`;
@@ -358,7 +358,7 @@ function renderReportDetailsUI(report) {
       thumbnailsHTML += `</div>`;
     }
   } else {
-    mainPhotoHTML = `<img src="https://via.placeholder.com/600x400?text=No+Photo+Uploaded" alt="No image" class="img-fluid w-100 rounded-3">`;
+    mainPhotoHTML = `<img src="https://via.placeholder.com/600x600?text=No+Photo+Uploaded" alt="No image" class="img-fluid instagram-photo">`;
   }
 
   container.innerHTML = `

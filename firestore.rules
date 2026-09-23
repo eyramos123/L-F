@@ -74,8 +74,8 @@ service cloud.firestore {
 
     // Reports Collection Rules
     match /reports/{reportId} {
-      // Any signed-in user can search and read all reports
-      allow read: if isSignedIn();
+      // Anyone (even unauthenticated visitors) can search and view published reports
+      allow read: if true;
       
       // Active users can create new lost/found reports
       // - Must match their own UID

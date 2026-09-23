@@ -78,6 +78,11 @@
               </div>
             `;
           }
+        } else {
+          showToast("Please sign up or sign in to view full item details and contact the reporter.", "warning");
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1000);
         }
       });
     });
