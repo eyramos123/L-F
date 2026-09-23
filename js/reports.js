@@ -297,8 +297,26 @@ export async function loadReportDetails(reportId) {
       }
     }
 
+    // Check if current user is reporter or admin
+    let isReporterOrAdmin = false;
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      if (currentUser.uid === report.reporterId) {
+        isReporterOrAdmin = true;
+      } else {
+        try {
+          const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+          if (userSnap.exists() && userSnap.data().role === 'admin') {
+            isReporterOrAdmin = true;
+          }
+        } catch (uErr) {
+          console.error("Admin check notice:", uErr);
+        }
+      }
+    }
+
     // Render HTML details
-    renderReportDetailsUI(report);
+    renderReportDetailsUI(report, isReporterOrAdmin);
   } catch (err) {
     console.error("Error loading report details: ", err);
     showToast(err.message, "danger");
@@ -307,7 +325,7 @@ export async function loadReportDetails(reportId) {
   }
 }
 
-function renderReportDetailsUI(report) {
+function renderReportDetailsUI(report, isReporterOrAdmin = false) {
   const container = document.getElementById('details-container');
   if (!container) return;
 
@@ -424,6 +442,26 @@ function renderReportDetailsUI(report) {
             <p class="text-muted">${report.instructions}</p>
           ` : ''}
 
+          <!-- Owner / Admin Action Control Bar -->
+          ${(isReporterOrAdmin && report.status === 'active') ? `
+            <div class="glass-card p-3 mb-3 border border-emerald border-opacity-25 bg-emerald-subtle bg-opacity-15">
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <div>
+                  <strong class="text-main d-block small"><i class="bi bi-shield-check text-emerald me-1"></i> Reporter Status Actions</strong>
+                  <small class="text-muted" style="font-size: 0.78rem;">Only you (the reporter) or an Admin can mark this item as claimed/returned.</small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button class="btn btn-sm btn-success btn-custom font-semibold shadow-sm px-3" id="btn-details-solve">
+                    <i class="bi bi-check-circle-fill me-1.5"></i> ${isTypeLost ? 'Mark as Claimed' : 'Mark as Returned'}
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger btn-custom font-semibold px-3" id="btn-details-close">
+                    <i class="bi bi-x-circle me-1.5"></i> Close Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          ` : ''}
+
           <!-- Buttons and Actions -->
           <div class="mt-auto">
             ${mapLinkButton}
@@ -479,7 +517,53 @@ function renderReportDetailsUI(report) {
     bookmarkIcon.className = isAdded ? 'bi bi-bookmark-fill text-warning fs-5' : 'bi bi-bookmark fs-5';
   });
 
-  // 3. Share Button Handler
+  // 3. Status Action Button Handlers
+  const solveBtn = document.getElementById('btn-details-solve');
+  if (solveBtn) {
+    solveBtn.addEventListener('click', async () => {
+      const solvedStatus = report.type === 'lost' ? 'claimed' : 'returned';
+      if (confirm(`Are you sure you want to mark this item as ${solvedStatus}?`)) {
+        showLoader();
+        try {
+          await updateDoc(doc(db, "reports", report.id), {
+            status: solvedStatus,
+            updatedAt: new Date()
+          });
+          await logActivity("resolve_report", `Marked report ${report.id} as ${solvedStatus}`);
+          showToast(`Item marked as ${solvedStatus} successfully!`, "success");
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err) {
+          showToast(err.message, "danger");
+        } finally {
+          hideLoader();
+        }
+      }
+    });
+  }
+
+  const closeBtn = document.getElementById('btn-details-close');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', async () => {
+      if (confirm("Are you sure you want to close this report?")) {
+        showLoader();
+        try {
+          await updateDoc(doc(db, "reports", report.id), {
+            status: "closed",
+            updatedAt: new Date()
+          });
+          await logActivity("close_report", `Closed report ${report.id}`);
+          showToast("Report closed successfully.", "success");
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (err) {
+          showToast(err.message, "danger");
+        } finally {
+          hideLoader();
+        }
+      }
+    });
+  }
+
+  // 4. Share Button Handler
   document.getElementById('btn-share').addEventListener('click', () => {
     const shareUrl = window.location.href;
     if (navigator.share) {

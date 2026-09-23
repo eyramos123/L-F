@@ -151,6 +151,23 @@ function injectNavbar(userRole) {
     </nav>
   `;
 
+  // Asynchronously sync user's latest custom avatar & name from Firestore
+  if (user) {
+    getDoc(doc(db, "users", user.uid)).then(userSnap => {
+      if (userSnap.exists()) {
+        const uData = userSnap.data();
+        const navAvatar = document.getElementById('nav-avatar');
+        const navName = document.querySelector('#userMenu span');
+        if (navAvatar && uData.photoURL) {
+          navAvatar.src = uData.photoURL;
+        }
+        if (navName && uData.displayName) {
+          navName.textContent = uData.displayName;
+        }
+      }
+    }).catch(err => console.error("Error syncing nav avatar:", err));
+  }
+
   // Attach sign out event if button is present
   const signOutBtn = document.getElementById('btn-sign-out');
   if (signOutBtn) {

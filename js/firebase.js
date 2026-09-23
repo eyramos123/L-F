@@ -7,7 +7,8 @@ import {
   signInWithPopup, 
   GoogleAuthProvider, 
   signOut, 
-  onAuthStateChanged 
+  onAuthStateChanged,
+  updateProfile
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // Import Cloud Firestore services
@@ -73,6 +74,7 @@ export {
   GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
+  updateProfile,
   
   // Firestore Database Functions
   collection,

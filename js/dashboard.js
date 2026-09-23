@@ -14,7 +14,8 @@ import {
   collection, 
   query, 
   where, 
-  getDocs 
+  getDocs,
+  updateProfile
 } from "./firebase.js";
 import { 
   showToast, 
@@ -167,10 +168,10 @@ async function loadUserReports(uid) {
                 
                 ${report.status === 'active' ? `
                   <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-success flex-grow-1 btn-custom btn-solve-report" data-id="${report.id}" data-type="${report.type}">
-                      <i class="bi bi-check-lg"></i> Mark Solved
+                    <button class="btn btn-sm btn-success flex-grow-1 btn-custom btn-solve-report font-semibold shadow-sm" data-id="${report.id}" data-type="${report.type}">
+                      <i class="bi bi-check-circle-fill me-1"></i> ${isLost ? 'Mark as Claimed' : 'Mark as Returned'}
                     </button>
-                    <button class="btn btn-sm btn-danger btn-custom btn-close-report" data-id="${report.id}">
+                    <button class="btn btn-sm btn-outline-danger btn-custom btn-close-report font-semibold" data-id="${report.id}" title="Close Report">
                       <i class="bi bi-x-lg"></i> Close
                     </button>
                   </div>
@@ -442,13 +443,23 @@ export async function handleProfileUpdate(formEl) {
       updatedAt: new Date()
     });
 
-    // We can also trigger a local auth profile update if required, 
-    // but updating the Firestore doc is our single source of truth.
+    // Also update Firebase Auth profile object
+    try {
+      await updateProfile(user, {
+        displayName: displayName,
+        photoURL: avatarUrl
+      });
+    } catch (authErr) {
+      console.warn("Auth profile sync notice:", authErr);
+    }
+
     showToast("Profile updated successfully!", "success");
     
-    // Update local nav image preview
+    // Update local nav image preview & display name immediately
     const navAvatar = document.getElementById('nav-avatar');
-    if (navAvatar) navAvatar.src = avatarUrl;
+    if (navAvatar && avatarUrl) navAvatar.src = avatarUrl;
+    const navName = document.querySelector('#userMenu span');
+    if (navName && displayName) navName.textContent = displayName;
 
     initProfilePage();
   } catch (err) {
