@@ -19,24 +19,43 @@
   <section class="hero-section py-4 border-bottom border-secondary border-opacity-10" style="margin-top: 75px;">
     <div class="container-fluid px-4 px-xl-5">
       
-      <!-- Top Title & Action Buttons Bar -->
-      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 animate-slide-up">
-        <div>
-          <h1 class="fw-extrabold text-main h2 mb-1">
-            TraceBack <span class="text-emerald">Lost & Found Portal</span>
+      <!-- Top Title, Live Community Announcement Banner & Action Buttons Bar -->
+      <div class="row align-items-center g-3 mb-4 animate-slide-up">
+        
+        <!-- Left: Title & Subtitle -->
+        <div class="col-xl-4 col-lg-4 col-md-5">
+          <h1 class="fw-extrabold text-main h3 mb-1 d-flex align-items-center gap-2">
+            <i class="bi bi-box-seam-fill text-emerald fs-4"></i> TraceBack <span class="text-emerald">Portal</span>
           </h1>
           <p class="text-muted small mb-0">Reconnecting lost items with owners through community reporting.</p>
         </div>
+
+        <!-- Center: Live Community Notice Banner (Fills Dead Space!) -->
+        <div class="col-xl-5 col-lg-5 col-md-7">
+          <div class="glass-card p-2 px-3 d-flex align-items-center gap-3 border border-secondary border-opacity-10 shadow-sm bg-body-tertiary">
+            <div class="rounded-circle bg-success-subtle p-2 text-emerald d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
+              <i class="bi bi-megaphone-fill fs-6 text-emerald"></i>
+            </div>
+            <div class="lh-sm overflow-hidden" style="font-size: 0.8rem;">
+              <div class="d-flex align-items-center gap-1.5 mb-0.5">
+                <span class="badge bg-emerald text-white font-semibold px-2 py-0.5" style="font-size: 0.65rem;">NOTICE</span>
+                <strong class="text-main">Offering rewards boosts item recovery by 80%!</strong>
+              </div>
+              <small class="text-muted d-block" style="font-size: 0.72rem;">Search items by location, color, brand, or Google Maps coordinates.</small>
+            </div>
+          </div>
+        </div>
         
-        <!-- Top Action Buttons (Right Aligned) -->
-        <div class="d-flex align-items-center gap-2 flex-wrap">
-          <a href="report-lost.html" class="btn btn-custom btn-danger shadow-sm d-inline-flex align-items-center gap-2">
+        <!-- Right: Action Buttons -->
+        <div class="col-xl-3 col-lg-3 col-md-12 d-flex align-items-center justify-content-md-end gap-2 flex-wrap">
+          <a href="report-lost.html" class="btn btn-custom btn-danger shadow-sm d-inline-flex align-items-center gap-2 py-2.5">
             <i class="bi bi-search"></i> Report Lost Item
           </a>
-          <a href="report-found.html" class="btn btn-custom text-white shadow-sm d-inline-flex align-items-center gap-2" style="background-color: var(--accent-emerald);">
+          <a href="report-found.html" class="btn btn-custom text-white shadow-sm d-inline-flex align-items-center gap-2 py-2.5" style="background-color: var(--accent-emerald);">
             <i class="bi bi-plus-circle"></i> Report Found Item
           </a>
         </div>
+
       </div>
 
       <!-- Upper Main Search & Advanced Search Card -->
