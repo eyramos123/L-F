@@ -299,7 +299,6 @@ export async function loadReportDetails(reportId) {
 
     // Check if current user is reporter or admin
     let isReporterOrAdmin = false;
-    const currentUser = auth.currentUser;
     if (currentUser) {
       if (currentUser.uid === report.reporterId) {
         isReporterOrAdmin = true;
