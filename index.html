@@ -15,375 +15,319 @@
   <!-- Global Header/Navbar Wrapper -->
   <header></header>
 
-  <!-- Top Hero & Search Bar Section -->
-  <section class="hero-section py-4 border-bottom border-secondary border-opacity-10" style="margin-top: 75px;">
-    <div class="container-fluid px-4 px-xl-5">
-      
-      <!-- Top Title, Live Community Announcement Banner & Action Buttons Bar -->
-      <div class="row align-items-center g-3 mb-4 animate-slide-up">
-        
-        <!-- Left: Title & Subtitle -->
-        <div class="col-xl-4 col-lg-4 col-md-5">
-          <h1 class="fw-extrabold text-main h3 mb-1 d-flex align-items-center gap-2">
-            <i class="bi bi-box-seam-fill text-emerald fs-4"></i> TraceBack <span class="text-emerald">Portal</span>
-          </h1>
-          <p class="text-muted small mb-0">Reconnecting lost items with owners through community reporting.</p>
-        </div>
-
-        <!-- Center: Live Community Notice Banner (Fills Dead Space!) -->
-        <div class="col-xl-5 col-lg-5 col-md-7">
-          <div class="glass-card p-2 px-3 d-flex align-items-center gap-3 border border-secondary border-opacity-10 shadow-sm bg-body-tertiary">
-            <div class="rounded-circle bg-success-subtle p-2 text-emerald d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
-              <i class="bi bi-megaphone-fill fs-6 text-emerald"></i>
-            </div>
-            <div class="lh-sm overflow-hidden" style="font-size: 0.8rem;">
-              <div class="d-flex align-items-center gap-1.5 mb-0.5">
-                <span class="badge bg-emerald text-white font-semibold px-2 py-0.5" style="font-size: 0.65rem;">NOTICE</span>
-                <strong class="text-main">Offering rewards boosts item recovery by 80%!</strong>
-              </div>
-              <small class="text-muted d-block" style="font-size: 0.72rem;">Search items by location, color, brand, or Google Maps coordinates.</small>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Right: Action Buttons -->
-        <div class="col-xl-3 col-lg-3 col-md-12 d-flex align-items-center justify-content-md-end gap-2 flex-wrap">
-          <a href="report-lost.html" class="btn btn-custom btn-danger shadow-sm d-inline-flex align-items-center gap-2 py-2.5">
-            <i class="bi bi-search"></i> Report Lost Item
-          </a>
-          <a href="report-found.html" class="btn btn-custom text-white shadow-sm d-inline-flex align-items-center gap-2 py-2.5" style="background-color: var(--accent-emerald);">
-            <i class="bi bi-plus-circle"></i> Report Found Item
-          </a>
-        </div>
-
-      </div>
-
-      <!-- Upper Main Search & Advanced Search Card -->
-      <div class="card glass-card p-3 p-md-4 shadow-lg mb-4 animate-slide-up" style="animation-delay: 0.1s;">
-        <form id="homepage-search-form" class="row g-3 align-items-end">
-          
-          <!-- Keyword Input -->
-          <div class="col-lg-5 position-relative">
-            <label for="search-keyword" class="form-label text-muted small fw-bold mb-1">Search Keywords</label>
-            <div class="input-group">
-              <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-emerald"></i></span>
-              <input type="text" class="form-control border-start-0" id="search-keyword" placeholder="Search item, brand, color, location..." autocomplete="off">
-            </div>
-            <div class="search-suggestion-box" id="keyword-suggestions"></div>
-          </div>
-
-          <!-- Category -->
-          <div class="col-sm-6 col-lg-3">
-            <label for="search-category" class="form-label text-muted small fw-bold mb-1">Category</label>
-            <select class="form-select" id="search-category">
-              <option value="all">All Categories</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Wallet">Wallet</option>
-              <option value="Documents">Documents</option>
-              <option value="Keys">Keys</option>
-              <option value="Jewelry">Jewelry</option>
-              <option value="Bags">Bags</option>
-              <option value="Pets">Pets</option>
-              <option value="Clothing">Clothing</option>
-              <option value="School Items">School Items</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-
-          <!-- Item Type -->
-          <div class="col-sm-6 col-lg-2">
-            <label for="search-type" class="form-label text-muted small fw-bold mb-1">Report Type</label>
-            <select class="form-select" id="search-type">
-              <option value="all">All Types</option>
-              <option value="lost">Lost Reports</option>
-              <option value="found">Found Reports</option>
-            </select>
-          </div>
-
-          <!-- Search Button -->
-          <div class="col-lg-2">
-            <button type="submit" class="btn btn-custom btn-custom-primary w-100 py-2.5">
-              <i class="bi bi-search me-1"></i> Search
-            </button>
-          </div>
-
-          <!-- Collapsible Advanced Filters Toggle & Quick Categories -->
-          <div class="col-12 mt-2 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-            <button class="btn btn-link btn-sm text-decoration-none text-emerald p-0 fw-semibold text-start" type="button" data-bs-toggle="collapse" data-bs-target="#moreFilters" aria-expanded="false" aria-controls="moreFilters">
-              <i class="bi bi-sliders me-1"></i> Advanced Filters (Location, Date, Brand, Status)
-            </button>
-
-            <!-- Quick Filter Badges -->
-            <div class="d-flex align-items-center gap-2 flex-wrap">
-              <span class="text-muted small">Quick Tags:</span>
-              <button type="button" class="badge rounded-pill bg-body-tertiary text-main border px-2 py-1 btn-quick-cat" data-cat="Electronics">Electronics</button>
-              <button type="button" class="badge rounded-pill bg-body-tertiary text-main border px-2 py-1 btn-quick-cat" data-cat="Wallet">Wallets</button>
-              <button type="button" class="badge rounded-pill bg-body-tertiary text-main border px-2 py-1 btn-quick-cat" data-cat="Keys">Keys</button>
-              <button type="button" class="badge rounded-pill bg-body-tertiary text-main border px-2 py-1 btn-quick-cat" data-cat="Documents">Documents</button>
-            </div>
-          </div>
-
-          <!-- Collapsible Advanced Filters Drawer -->
-          <div class="collapse col-12" id="moreFilters">
-            <div class="row g-3 pt-3 border-top border-secondary border-opacity-10 mt-2">
-              <div class="col-md-3">
-                <label for="search-location" class="form-label text-muted small fw-bold">Location</label>
-                <input type="text" class="form-control form-control-sm" id="search-location" placeholder="e.g. Library, Park">
-              </div>
-              <div class="col-md-3">
-                <label for="search-color" class="form-label text-muted small fw-bold">Color</label>
-                <input type="text" class="form-control form-control-sm" id="search-color" placeholder="e.g. Black, Silver">
-              </div>
-              <div class="col-md-3">
-                <label for="search-brand" class="form-label text-muted small fw-bold">Brand</label>
-                <input type="text" class="form-control form-control-sm" id="search-brand" placeholder="e.g. Apple, Nike">
-              </div>
-              <div class="col-md-3">
-                <label for="search-date" class="form-label text-muted small fw-bold">Date Reported</label>
-                <input type="date" class="form-control form-control-sm" id="search-date">
-              </div>
-              <div class="col-md-6">
-                <label for="search-status" class="form-label text-muted small fw-bold">Status</label>
-                <select class="form-select form-select-sm" id="search-status">
-                  <option value="all">All Statuses</option>
-                  <option value="active">Active (Open)</option>
-                  <option value="claimed">Claimed</option>
-                  <option value="returned">Returned</option>
-                  <option value="closed">Closed</option>
-                </select>
-              </div>
-              <div class="col-md-6">
-                <label for="search-sort" class="form-label text-muted small fw-bold">Sort Order</label>
-                <select class="form-select form-select-sm" id="search-sort">
-                  <option value="newest">Newest First</option>
-                  <option value="oldest">Oldest First</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-        </form>
-      </div>
-
-      <!-- Split Row: Dynamic Carousel on Left & Quick Hub Panel on Right (No Dead Space!) -->
-      <div class="row g-4 animate-slide-up" style="animation-delay: 0.2s;">
-        
-        <!-- Left Side: Interactive Featured Carousel (7 Columns) -->
-        <div class="col-lg-7">
-          <div class="card glass-card p-3.5 h-100 d-flex flex-column justify-content-between overflow-hidden">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h5 class="fw-bold text-main mb-0 d-flex align-items-center gap-2">
-                <i class="bi bi-stars text-warning fs-5"></i> Featured Reports Carousel
-              </h5>
-              <span class="badge bg-emerald-subtle text-emerald px-2.5 py-1 font-semibold" style="font-size: 0.75rem;">Live Showcase</span>
-            </div>
-
-            <!-- Carousel Wrapper -->
-            <div id="featuredReportsCarousel" class="carousel slide my-auto" data-bs-ride="carousel" data-bs-interval="4500">
-              <div class="carousel-indicators" id="carousel-indicators-container"></div>
-              <div class="carousel-inner" id="carousel-items-container">
-                <div class="text-center py-5 text-muted">
-                  <div class="spinner-border spinner-border-sm text-emerald me-2"></div> Loading carousel...
-                </div>
-              </div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#featuredReportsCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon rounded-circle bg-dark p-2" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#featuredReportsCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon rounded-circle bg-dark p-2" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Side: Quick Action Hub & Live Metric Badges (5 Columns) -->
-        <div class="col-lg-5">
-          <div class="card glass-card p-4 h-100 d-flex flex-column justify-content-between">
-            <div>
-              <h5 class="fw-bold text-main mb-3 d-flex align-items-center gap-2">
-                <i class="bi bi-lightning-charge-fill text-emerald"></i> Quick Action Hub
-              </h5>
-              
-              <!-- Action Button Cards -->
-              <div class="d-flex flex-column gap-2.5 mb-3">
-                <a href="report-lost.html" class="btn btn-custom btn-outline-danger d-flex align-items-center justify-content-between p-3 text-start">
-                  <div>
-                    <span class="fw-bold d-block mb-0.5"><i class="bi bi-search me-2"></i> Report Lost Item</span>
-                    <small class="text-muted">Broadcast a missing item to finding community.</small>
-                  </div>
-                  <i class="bi bi-chevron-right fs-5 ms-2"></i>
-                </a>
-                
-                <a href="report-found.html" class="btn btn-custom btn-outline-success d-flex align-items-center justify-content-between p-3 text-start">
-                  <div>
-                    <span class="fw-bold d-block mb-0.5"><i class="bi bi-plus-circle me-2"></i> Report Found Item</span>
-                    <small class="text-muted">Document a found item with location mapping.</small>
-                  </div>
-                  <i class="bi bi-chevron-right fs-5 ms-2"></i>
-                </a>
-              </div>
-            </div>
-
-            <!-- Mini Metrics Bar -->
-            <div class="p-3 glass-card bg-body-tertiary border border-secondary border-opacity-10 rounded-3">
-              <div class="row text-center g-2">
-                <div class="col-4">
-                  <div class="fw-extrabold text-emerald fs-4" id="hero-stat-returned">0</div>
-                  <div class="text-muted font-semibold uppercase" style="font-size: 0.68rem;">Returned</div>
-                </div>
-                <div class="col-4 border-start border-end border-secondary border-opacity-10">
-                  <div class="fw-extrabold text-main fs-4" id="hero-stat-total">0</div>
-                  <div class="text-muted font-semibold uppercase" style="font-size: 0.68rem;">Total Items</div>
-                </div>
-                <div class="col-4">
-                  <div class="fw-extrabold text-main fs-4" id="hero-stat-users">0</div>
-                  <div class="text-muted font-semibold uppercase" style="font-size: 0.68rem;">Users</div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Main Catalog Area -->
-  <main class="container-fluid px-4 px-xl-5 py-4">
+  <!-- Main Dashboard Portal (3-Column Layout with Center Stream & Sidebars) -->
+  <main class="container-xl py-4" style="margin-top: 75px;">
     
-    <!-- Dynamic Search Results Section -->
-    <div id="search-results-section" class="mb-5 d-none">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold text-main mb-0"><i class="bi bi-search me-2 text-emerald"></i> Search Results</h3>
-        <button class="btn btn-sm btn-outline-secondary btn-custom" id="btn-clear-search">Clear Search</button>
-      </div>
-      <div id="search-results-container" class="row g-4"></div>
-      <hr class="my-5 border-secondary opacity-10">
-    </div>
-
-    <!-- Recent Lost and Found Side-by-Side -->
-    <div id="default-reports-section" class="row g-5">
-      
-      <!-- Recent Lost Items -->
-      <div class="col-lg-6">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="fw-bold text-main mb-0">
-            <span class="border-bottom border-danger border-3 pb-2"><i class="bi bi-file-earmark-exclamation-fill text-danger me-2"></i>Recent Lost Items</span>
-          </h3>
-          <a href="#" class="btn btn-link btn-sm text-decoration-none text-emerald font-semibold btn-see-all-lost">See All</a>
+    <!-- Top Announcement Banner -->
+    <div class="glass-card p-3 mb-4 d-flex align-items-center justify-content-between border border-secondary border-opacity-10 bg-body-tertiary animate-slide-up">
+      <div class="d-flex align-items-center gap-3">
+        <div class="rounded-circle bg-success-subtle p-2 text-emerald d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px;">
+          <i class="bi bi-megaphone-fill fs-5 text-emerald"></i>
         </div>
-        <div class="row g-4" id="recent-lost-container">
-          <!-- Dynamically populated -->
-          <div class="col-12 text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-emerald"></div> Loading...</div>
-        </div>
-      </div>
-
-      <!-- Recent Found Items -->
-      <div class="col-lg-6">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h3 class="fw-bold text-main mb-0">
-            <span class="border-bottom border-success border-3 pb-2"><i class="bi bi-file-earmark-check-fill text-emerald me-2"></i>Recent Found Items</span>
-          </h3>
-          <a href="#" class="btn btn-link btn-sm text-decoration-none text-emerald font-semibold btn-see-all-found">See All</a>
-        </div>
-        <div class="row g-4" id="recent-found-container">
-          <!-- Dynamically populated -->
-          <div class="col-12 text-center py-4 text-muted"><div class="spinner-border spinner-border-sm text-emerald"></div> Loading...</div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Recently Viewed Reports Section -->
-    <div id="recently-viewed-section" class="mt-5 d-none">
-      <hr class="my-5 border-secondary opacity-10">
-      <h3 class="fw-bold text-main mb-4"><i class="bi bi-clock-history me-2 text-emerald"></i> Recently Viewed</h3>
-      <div class="row g-4" id="recently-viewed-container"></div>
-    </div>
-
-    <!-- How It Works Section -->
-    <hr class="my-5 border-secondary opacity-10">
-    <section class="py-4">
-      <div class="text-center mb-5">
-        <h2 class="fw-extrabold text-main">How It Works</h2>
-        <p class="text-muted col-lg-6 mx-auto">Reconnecting lost assets is a simple four-step moderation system structured to guarantee speed, safety, and legitimacy.</p>
-      </div>
-      
-      <div class="row g-4 text-center">
-        <div class="col-md-3">
-          <div class="card glass-card p-4 h-100 border-0">
-            <div class="rounded-circle bg-danger-subtle text-danger mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-pencil-square fs-3"></i>
-            </div>
-            <h5 class="fw-bold text-main mb-2">1. Submit Report</h5>
-            <p class="text-muted small mb-0">Fill out details about your lost item, or document a found item with maps coordinates.</p>
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-0.5">
+            <span class="badge bg-emerald text-white font-semibold me-1 px-2 py-0.5" style="font-size: 0.65rem;">COMMUNITY NOTICE</span>
+            <strong class="text-main">Offering a reward increases item recovery rates by 80%!</strong>
           </div>
+          <small class="text-muted d-block">Search items by location, color, brand, or Google Maps coordinates.</small>
         </div>
+      </div>
+      <div class="d-none d-md-flex align-items-center gap-2">
+        <a href="report-lost.html" class="btn btn-sm btn-danger btn-custom shadow-sm"><i class="bi bi-search me-1"></i> Report Lost Item</a>
+        <a href="report-found.html" class="btn btn-sm text-white btn-custom shadow-sm" style="background-color: var(--accent-emerald);"><i class="bi bi-plus-circle me-1"></i> Report Found Item</a>
+      </div>
+    </div>
+
+    <!-- 3-COLUMN MAIN DASHBOARD GRID -->
+    <div class="row g-4">
+      
+      <!-- ==================== LEFT SIDEBAR ==================== -->
+      <div class="col-xl-3 col-lg-3">
         
-        <div class="col-md-3">
-          <div class="card glass-card p-4 h-100 border-0">
-            <div class="rounded-circle bg-warning-subtle text-warning mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-shield-check fs-3"></i>
-            </div>
-            <h5 class="fw-bold text-main mb-2">2. Verification</h5>
-            <p class="text-muted small mb-0">Administrators review and moderate new posts to prevent spam or false reports.</p>
+        <!-- Category Navigator Widget -->
+        <div class="card glass-card p-3 mb-4 shadow-sm">
+          <h6 class="fw-bold text-main mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-grid-fill text-emerald"></i> Browse Categories
+          </h6>
+          <div class="list-group list-group-flush border-0">
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="all">
+              <span><i class="bi bi-collection-fill me-2 text-primary"></i> All Items</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="Electronics">
+              <span><i class="bi bi-laptop me-2 text-info"></i> Electronics</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="Wallet">
+              <span><i class="bi bi-wallet2 me-2 text-warning"></i> Wallets & Purses</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="Documents">
+              <span><i class="bi bi-file-earmark-person me-2 text-danger"></i> Documents & IDs</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="Keys">
+              <span><i class="bi bi-key-fill me-2 text-emerald"></i> Keys & Badges</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="Jewelry">
+              <span><i class="bi bi-gem me-2" style="color: #a855f7;"></i> Jewelry</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="Bags">
+              <span><i class="bi bi-bag-fill me-2" style="color: #f59e0b;"></i> Bags & Luggage</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
+            <button class="list-group-item list-group-item-action bg-transparent border-0 px-2 py-2 text-main d-flex align-items-center justify-content-between btn-quick-cat" data-cat="Pets">
+              <span><i class="bi bi-heart-pulse-fill me-2" style="color: #f43f5e;"></i> Pets</span>
+              <i class="bi bi-chevron-right small text-muted"></i>
+            </button>
           </div>
         </div>
 
-        <div class="col-md-3">
-          <div class="card glass-card p-4 h-100 border-0">
-            <div class="rounded-circle bg-info-subtle text-info mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-search fs-3"></i>
-            </div>
-            <h5 class="fw-bold text-main mb-2">3. Match Search</h5>
-            <p class="text-muted small mb-0">Browse details and filter color, locations, categories, or check auto-suggestions.</p>
-          </div>
+        <!-- Safety Guidelines Widget -->
+        <div class="card glass-card p-3 mb-4 shadow-sm border-0 bg-body-tertiary text-main">
+          <h6 class="fw-bold mb-2 d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check text-emerald fs-5"></i> Safe Handover Tips
+          </h6>
+          <ul class="list-unstyled small text-muted mb-0 d-flex flex-column gap-2" style="font-size: 0.78rem;">
+            <li><i class="bi bi-check-circle-fill text-emerald me-1.5"></i> Always meet in public, well-lit places.</li>
+            <li><i class="bi bi-check-circle-fill text-emerald me-1.5"></i> Verify ownership with unique photos or serials.</li>
+            <li><i class="bi bi-check-circle-fill text-emerald me-1.5"></i> Use built-in messaging to keep records safe.</li>
+          </ul>
         </div>
 
-        <div class="col-md-3">
-          <div class="card glass-card p-4 h-100 border-0">
-            <div class="rounded-circle bg-success-subtle text-success mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 70px; height: 70px;">
-              <i class="bi bi-hand-thumbs-up fs-3"></i>
-            </div>
-            <h5 class="fw-bold text-main mb-2">4. Claim & Return</h5>
-            <p class="text-muted small mb-0">Contact the reporter securely, verify ownership details, and return the item.</p>
-          </div>
-        </div>
       </div>
-    </section>
 
-    <!-- Platform Statistics Card -->
-    <section class="mt-5 pt-4">
-      <div class="card glass-card border-0 p-5 overflow-hidden position-relative">
-        <div class="position-absolute top-0 end-0 opacity-10 fs-1 p-5 text-emerald"><i class="bi bi-graph-up-arrow" style="font-size: 15rem;"></i></div>
-        <div class="row align-items-center g-4">
-          <div class="col-lg-5">
-            <h2 class="fw-extrabold text-main mb-3">TraceBack Activity</h2>
-            <p class="text-muted mb-0">Our platform operates serverless in real-time, providing live statistics regarding resolved reports and items successfully returned.</p>
+      <!-- ==================== CENTER MAIN STREAM ==================== -->
+      <div class="col-xl-6 col-lg-6">
+        
+        <!-- Search & Filter Card -->
+        <div class="card glass-card p-3 p-md-4 shadow-sm mb-4">
+          <h6 class="fw-bold mb-3 text-main d-flex align-items-center gap-2">
+            <i class="bi bi-search text-emerald"></i> Search Catalog
+          </h6>
+          <form id="homepage-search-form" class="row g-2">
+            <div class="col-12 position-relative">
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-emerald"></i></span>
+                <input type="text" class="form-control border-start-0" id="search-keyword" placeholder="Search item, brand, color, location..." autocomplete="off">
+              </div>
+              <div class="search-suggestion-box" id="keyword-suggestions"></div>
+            </div>
+            
+            <div class="col-6">
+              <select class="form-select form-select-sm" id="search-category">
+                <option value="all">All Categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Wallet">Wallet</option>
+                <option value="Documents">Documents</option>
+                <option value="Keys">Keys</option>
+                <option value="Jewelry">Jewelry</option>
+                <option value="Bags">Bags</option>
+                <option value="Pets">Pets</option>
+                <option value="Clothing">Clothing</option>
+                <option value="School Items">School Items</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+            
+            <div class="col-6">
+              <select class="form-select form-select-sm" id="search-type">
+                <option value="all">All Item Types</option>
+                <option value="lost">Lost Reports</option>
+                <option value="found">Found Reports</option>
+              </select>
+            </div>
+
+            <div class="col-12 d-flex justify-content-between align-items-center mt-2">
+              <button class="btn btn-link btn-sm text-decoration-none text-emerald p-0 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#moreFilters">
+                <i class="bi bi-sliders me-1"></i> Advanced Filters
+              </button>
+              <button type="submit" class="btn btn-sm btn-custom btn-custom-primary px-4">
+                Search
+              </button>
+            </div>
+
+            <div class="collapse col-12" id="moreFilters">
+              <div class="row g-2 pt-2 border-top border-secondary border-opacity-10 mt-2">
+                <div class="col-6">
+                  <input type="text" class="form-control form-control-sm" id="search-location" placeholder="Location">
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control form-control-sm" id="search-color" placeholder="Color">
+                </div>
+                <div class="col-6">
+                  <input type="text" class="form-control form-control-sm" id="search-brand" placeholder="Brand">
+                </div>
+                <div class="col-6">
+                  <input type="date" class="form-control form-control-sm" id="search-date">
+                </div>
+                <div class="col-6">
+                  <select class="form-select form-select-sm" id="search-status">
+                    <option value="all">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="claimed">Claimed</option>
+                    <option value="returned">Returned</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <select class="form-select form-select-sm" id="search-sort">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Featured Items Carousel -->
+        <div class="card glass-card p-3 mb-4 shadow-sm overflow-hidden">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold text-main mb-0 d-flex align-items-center gap-2">
+              <i class="bi bi-stars text-warning fs-5"></i> Featured Reports Carousel
+            </h6>
+            <span class="badge bg-emerald-subtle text-emerald px-2 py-0.5 font-semibold" style="font-size: 0.7rem;">Live</span>
           </div>
-          <div class="col-lg-7">
-            <div class="row g-4 text-center">
+
+          <div id="featuredReportsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4500">
+            <div class="carousel-indicators" id="carousel-indicators-container"></div>
+            <div class="carousel-inner" id="carousel-items-container">
+              <div class="text-center py-5 text-muted">
+                <div class="spinner-border spinner-border-sm text-emerald me-2"></div> Loading showcase...
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#featuredReportsCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon rounded-circle bg-dark p-2" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#featuredReportsCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon rounded-circle bg-dark p-2" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Search Results or Default Catalog -->
+        <div id="search-results-section" class="mb-4 d-none">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-main mb-0"><i class="bi bi-search me-2 text-emerald"></i> Search Results</h5>
+            <button class="btn btn-sm btn-outline-secondary btn-custom" id="btn-clear-search">Clear Search</button>
+          </div>
+          <div id="search-results-container" class="row g-3"></div>
+        </div>
+
+        <div id="default-reports-section" class="row g-4">
+          <!-- Lost Items Column -->
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold text-main mb-0">
+                <span class="border-bottom border-danger border-3 pb-1"><i class="bi bi-file-earmark-exclamation-fill text-danger me-2"></i>Recent Lost Reports</span>
+              </h5>
+              <a href="#" class="btn btn-link btn-sm text-decoration-none text-emerald font-semibold btn-see-all-lost">See All</a>
+            </div>
+            <div class="row g-3" id="recent-lost-container"></div>
+          </div>
+
+          <!-- Found Items Column -->
+          <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+              <h5 class="fw-bold text-main mb-0">
+                <span class="border-bottom border-success border-3 pb-1"><i class="bi bi-file-earmark-check-fill text-emerald me-2"></i>Recent Found Reports</span>
+              </h5>
+              <a href="#" class="btn btn-link btn-sm text-decoration-none text-emerald font-semibold btn-see-all-found">See All</a>
+            </div>
+            <div class="row g-3" id="recent-found-container"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ==================== RIGHT SIDEBAR ==================== -->
+      <div class="col-xl-3 col-lg-3">
+        
+        <!-- Action Hub Card -->
+        <div class="card glass-card p-3 mb-4 shadow-sm">
+          <h6 class="fw-bold text-main mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-lightning-charge-fill text-emerald"></i> Quick Action Hub
+          </h6>
+          <div class="d-flex flex-column gap-2 mb-3">
+            <a href="report-lost.html" class="btn btn-custom btn-outline-danger d-flex align-items-center justify-content-between p-2.5 text-start">
+              <div>
+                <span class="fw-bold d-block small mb-0.5"><i class="bi bi-search me-1.5"></i> Report Lost Item</span>
+                <small class="text-muted" style="font-size: 0.72rem;">Broadcast a missing item.</small>
+              </div>
+              <i class="bi bi-chevron-right small"></i>
+            </a>
+            
+            <a href="report-found.html" class="btn btn-custom btn-outline-success d-flex align-items-center justify-content-between p-2.5 text-start">
+              <div>
+                <span class="fw-bold d-block small mb-0.5"><i class="bi bi-plus-circle me-1.5"></i> Report Found Item</span>
+                <small class="text-muted" style="font-size: 0.72rem;">Document a found item.</small>
+              </div>
+              <i class="bi bi-chevron-right small"></i>
+            </a>
+          </div>
+
+          <!-- Activity Stats Counter -->
+          <div class="p-2.5 glass-card bg-body-tertiary border border-secondary border-opacity-10 rounded-3">
+            <div class="row text-center g-1">
               <div class="col-4">
-                <div class="fs-1 fw-extrabold text-emerald" id="stat-returned-items">0</div>
-                <div class="text-muted small font-semibold uppercase">Returned Items</div>
+                <div class="fw-extrabold text-emerald fs-5" id="hero-stat-returned">0</div>
+                <div class="text-muted uppercase" style="font-size: 0.65rem;">Returned</div>
+              </div>
+              <div class="col-4 border-start border-end border-secondary border-opacity-10">
+                <div class="fw-extrabold text-main fs-5" id="hero-stat-total">0</div>
+                <div class="text-muted uppercase" style="font-size: 0.65rem;">Total</div>
               </div>
               <div class="col-4">
-                <div class="fs-1 fw-extrabold text-main" id="stat-registered-items">0</div>
-                <div class="text-muted small font-semibold uppercase">Total Claims</div>
-              </div>
-              <div class="col-4">
-                <div class="fs-1 fw-extrabold text-main" id="stat-active-members">0</div>
-                <div class="text-muted small font-semibold uppercase">Active Users</div>
+                <div class="fw-extrabold text-primary fs-5" id="hero-stat-users">0</div>
+                <div class="text-muted uppercase" style="font-size: 0.65rem;">Users</div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- How It Works Card Widget -->
+        <div class="card glass-card p-3 mb-4 shadow-sm">
+          <h6 class="fw-bold text-main mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-info-circle-fill text-emerald"></i> How TraceBack Works
+          </h6>
+          <div class="d-flex flex-column gap-2.5 small">
+            <div class="d-flex align-items-start gap-2">
+              <span class="badge rounded-circle bg-danger text-white p-1 px-2">1</span>
+              <div>
+                <strong class="text-main d-block">Submit Report</strong>
+                <small class="text-muted">Upload missing or found item details.</small>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-2">
+              <span class="badge rounded-circle bg-warning text-dark p-1 px-2">2</span>
+              <div>
+                <strong class="text-main d-block">Moderation</strong>
+                <small class="text-muted">Admins verify legitimacy.</small>
+              </div>
+            </div>
+            <div class="d-flex align-items-start gap-2">
+              <span class="badge rounded-circle bg-info text-white p-1 px-2">3</span>
+              <div>
+                <strong class="text-main d-block">Match & Connect</strong>
+                <small class="text-muted">Search and message reporters.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recently Viewed Widget -->
+        <div id="recently-viewed-section" class="card glass-card p-3 mb-4 shadow-sm d-none">
+          <h6 class="fw-bold text-main mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-clock-history text-emerald"></i> Recently Viewed
+          </h6>
+          <div class="d-flex flex-column gap-2" id="recently-viewed-container"></div>
+        </div>
+
       </div>
-    </section>
+
+    </div>
 
   </main>
 
