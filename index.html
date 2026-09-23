@@ -18,29 +18,27 @@
   <!-- Main Dashboard Portal (3-Column Layout with Center Stream & Sidebars) -->
   <main class="container-fluid px-3 px-md-4 px-xl-5 py-4" style="margin-top: 75px;">
     
-    <!-- Top Live Network Banner -->
-    <div class="glass-card p-3 mb-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between border border-secondary border-opacity-10 bg-body-tertiary animate-slide-up gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <div class="rounded-circle bg-emerald-subtle p-2 text-emerald d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
-          <i class="bi bi-broadcast fs-5 text-emerald"></i>
-        </div>
-        <div>
-          <div class="d-flex align-items-center gap-2 mb-0.5 flex-wrap">
-            <span class="badge bg-emerald text-white font-semibold px-2.5 py-1 rounded-pill d-inline-flex align-items-center gap-1.5" style="font-size: 0.68rem; letter-spacing: 0.5px;">
-              <span class="spinner-grow spinner-grow-sm text-white" style="width: 6px; height: 6px;" role="status"></span> LIVE NETWORK
-            </span>
-            <strong class="text-main fs-6">TraceBack Lost & Found Recovery Portal</strong>
+    <!-- Top Live Network Banner (Centered) -->
+    <div class="glass-card p-3 p-md-3.5 mb-4 border border-secondary border-opacity-10 bg-body-tertiary animate-slide-up text-center">
+      <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-3">
+        <div class="d-flex align-items-center gap-2.5 justify-content-center flex-wrap">
+          <div class="rounded-circle bg-emerald-subtle p-2 text-emerald d-inline-flex align-items-center justify-content-center flex-shrink-0" style="width: 38px; height: 38px;">
+            <i class="bi bi-broadcast fs-5 text-emerald"></i>
           </div>
-          <small class="text-muted d-block">Real-time Lost & Found matchmaking, categorized catalog, and secure handovers.</small>
+          <span class="badge bg-emerald text-white font-semibold px-2.5 py-1 rounded-pill d-inline-flex align-items-center gap-1.5" style="font-size: 0.68rem; letter-spacing: 0.5px;">
+            <span class="spinner-grow spinner-grow-sm text-white" style="width: 6px; height: 6px;" role="status"></span> LIVE NETWORK
+          </span>
+          <strong class="text-main fs-6">TraceBack Lost & Found Recovery Portal</strong>
         </div>
-      </div>
-      <div class="d-flex align-items-center gap-2 flex-shrink-0">
-        <a href="report-lost.html" class="btn btn-sm btn-danger btn-custom shadow-sm font-semibold px-3 py-2">
-          <i class="bi bi-exclamation-triangle-fill me-1.5"></i> Report Lost Item
-        </a>
-        <a href="report-found.html" class="btn btn-sm text-white btn-custom shadow-sm font-semibold px-3 py-2" style="background-color: var(--accent-emerald);">
-          <i class="bi bi-plus-circle-fill me-1.5"></i> Report Found Item
-        </a>
+        <div class="vr d-none d-md-block opacity-25" style="height: 24px;"></div>
+        <div class="d-flex align-items-center gap-2 justify-content-center">
+          <a href="report-lost.html" class="btn btn-sm btn-danger btn-custom shadow-sm font-semibold px-3 py-1.5">
+            <i class="bi bi-exclamation-triangle-fill me-1.5"></i> Report Lost Item
+          </a>
+          <a href="report-found.html" class="btn btn-sm text-white btn-custom shadow-sm font-semibold px-3 py-1.5" style="background-color: var(--accent-emerald);">
+            <i class="bi bi-plus-circle-fill me-1.5"></i> Report Found Item
+          </a>
+        </div>
       </div>
     </div>
 
@@ -103,6 +101,41 @@
           </ul>
         </div>
 
+        <!-- Urgent Broadcast Widget -->
+        <div class="card glass-card p-3 mb-4 shadow-sm border border-danger border-opacity-25 bg-danger-subtle bg-opacity-10 text-main">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-megaphone-fill text-danger fs-5"></i>
+            <h6 class="fw-bold text-main mb-0">Urgent Lost Item?</h6>
+          </div>
+          <p class="text-muted small mb-3" style="font-size: 0.78rem; line-height: 1.4;">
+            Lost an essential ID, wallet, or pet? Broadcast your report to alert local finders instantly.
+          </p>
+          <a href="report-lost.html" class="btn btn-sm btn-outline-danger w-100 font-semibold py-1.5 shadow-sm">
+            <i class="bi bi-broadcast me-1"></i> Broadcast Now
+          </a>
+        </div>
+
+        <!-- Community Recovery Highlights Widget -->
+        <div class="card glass-card p-3 mb-4 shadow-sm text-main">
+          <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-graph-up-arrow text-emerald"></i> Recovery Highlights
+          </h6>
+          <div class="d-flex flex-column gap-2.5" style="font-size: 0.78rem;">
+            <div class="d-flex justify-content-between align-items-center pb-2 border-bottom border-secondary border-opacity-10">
+              <span class="text-muted"><i class="bi bi-check2-circle text-emerald me-1.5"></i> Recovery Rate</span>
+              <span class="fw-bold text-emerald">84%</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center pb-2 border-bottom border-secondary border-opacity-10">
+              <span class="text-muted"><i class="bi bi-speedometer2 text-info me-1.5"></i> Avg. Return Time</span>
+              <span class="fw-bold text-main">&lt; 48 Hours</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted"><i class="bi bi-shield-lock text-warning me-1.5"></i> Moderated Claims</span>
+              <span class="fw-bold text-main">100% Verified</span>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- ==================== CENTER MAIN STREAM ==================== -->
@@ -118,24 +151,27 @@
           </div>
 
           <!-- Quick Filter Pills -->
-          <div class="d-flex align-items-center gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-none" id="quick-filter-pills">
-            <button type="button" class="filter-pill active" data-pill-type="all">
-              <i class="bi bi-grid-fill me-1"></i> All
+          <div class="d-flex align-items-center gap-2 overflow-x-auto pb-2 mb-3 scrollbar-none" id="quick-filter-pills">
+            <button type="button" class="filter-pill active shadow-sm" data-pill-type="all">
+              <i class="bi bi-compass-fill text-primary"></i> All Reports
             </button>
-            <button type="button" class="filter-pill" data-pill-type="lost">
-              <i class="bi bi-exclamation-circle-fill text-danger me-1"></i> Lost
+            <button type="button" class="filter-pill shadow-sm" data-pill-type="lost">
+              <i class="bi bi-exclamation-diamond-fill text-danger"></i> Lost Items
             </button>
-            <button type="button" class="filter-pill" data-pill-type="found">
-              <i class="bi bi-check-circle-fill text-emerald me-1"></i> Found
+            <button type="button" class="filter-pill shadow-sm" data-pill-type="found">
+              <i class="bi bi-patch-check-fill text-emerald"></i> Found Items
             </button>
-            <button type="button" class="filter-pill" data-pill-cat="Electronics">
-              <i class="bi bi-laptop me-1"></i> Tech
+            <button type="button" class="filter-pill shadow-sm" data-pill-cat="Electronics">
+              <i class="bi bi-phone-vibrate-fill text-info"></i> Electronics
             </button>
-            <button type="button" class="filter-pill" data-pill-cat="Wallet">
-              <i class="bi bi-wallet2 me-1"></i> Wallets
+            <button type="button" class="filter-pill shadow-sm" data-pill-cat="Wallet">
+              <i class="bi bi-wallet-fill text-warning"></i> Wallets & Cards
             </button>
-            <button type="button" class="filter-pill" data-pill-cat="Keys">
-              <i class="bi bi-key-fill me-1"></i> Keys
+            <button type="button" class="filter-pill shadow-sm" data-pill-cat="Keys">
+              <i class="bi bi-key-fill" style="color: #a855f7;"></i> Keys & Badges
+            </button>
+            <button type="button" class="filter-pill shadow-sm" data-pill-cat="Documents">
+              <i class="bi bi-file-earmark-person-fill text-danger"></i> IDs & Documents
             </button>
           </div>
 
@@ -481,10 +517,10 @@
 
         const slide = `
           <div class="carousel-item ${activeClass}">
-            <div class="p-2 bg-body-tertiary rounded-3 overflow-hidden">
+            <div class="p-3 bg-body-tertiary rounded-3 overflow-hidden">
               <div class="row g-3 align-items-center">
                 <div class="col-md-6">
-                  <div class="card-img-wrapper position-relative overflow-hidden rounded-3 shadow-sm" style="aspect-ratio: 16 / 9; max-height: 220px; width: 100%; background: rgba(0,0,0,0.15);">
+                  <div class="card-img-wrapper position-relative overflow-hidden rounded-3 shadow" style="aspect-ratio: 16 / 9; min-height: 240px; max-height: 300px; width: 100%; background: rgba(0,0,0,0.15);">
                     <span class="type-pill ${typeBadgeClass}">${report.type}</span>
                     <img src="${img}" alt="${report.itemName}" style="width: 100%; height: 100%; object-fit: cover;">
                   </div>
@@ -492,15 +528,15 @@
                 <div class="col-md-6">
                   <div class="p-2 d-flex flex-column h-100 justify-content-between">
                     <div>
-                      <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="status-badge ${statusBadge} px-2.5 py-0.5" style="font-size: 0.72rem;">${report.status}</span>
+                      <div class="d-flex justify-content-between align-items-center mb-2.5">
+                        <span class="status-badge ${statusBadge} px-3 py-1 font-semibold" style="font-size: 0.75rem;">${report.status}</span>
                         <span class="text-muted small"><i class="bi bi-clock me-1"></i>${timeAgo(report.createdAt)}</span>
                       </div>
-                      <h5 class="fw-bold text-main mb-1 fs-5">${report.itemName}</h5>
-                      <p class="text-muted small mb-2"><i class="bi bi-geo-alt text-emerald me-1"></i>${report.location}</p>
-                      <p class="text-muted small mb-3" style="line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${report.description}</p>
+                      <h4 class="fw-extrabold text-main mb-1.5 fs-4">${report.itemName}</h4>
+                      <p class="text-muted small mb-2.5 font-medium"><i class="bi bi-geo-alt-fill text-emerald me-1.5 fs-6"></i>${report.location}</p>
+                      <p class="text-muted small mb-3.5 text-truncate-3" style="line-height: 1.5; font-size: 0.85rem;">${report.description}</p>
                     </div>
-                    <a href="report-details.html?id=${report.id}" class="btn btn-custom btn-custom-primary w-100 py-2.5 shadow-sm font-semibold btn-view-details mt-2" data-id="${report.id}">
+                    <a href="report-details.html?id=${report.id}" class="btn btn-custom btn-custom-primary w-100 py-2.5 shadow-sm font-semibold fs-6 btn-view-details mt-2" data-id="${report.id}">
                       <i class="bi bi-eye-fill me-1.5"></i> View Item Details
                     </a>
                   </div>
@@ -566,30 +602,26 @@
         else if (report.status === 'rejected') statusBadge = 'status-rejected';
 
         const card = `
-          <div class="col-12">
-            <div class="card glass-card catalog-card overflow-hidden border-0 shadow-sm">
-              <div class="row g-0 align-items-center">
-                <div class="col-sm-5 card-img-wrapper position-relative" style="aspect-ratio: 4 / 3; max-height: 160px; overflow: hidden; background: rgba(0,0,0,0.12);">
-                  <span class="type-pill ${badgeClass}">${report.type}</span>
-                  <img src="${img}" alt="${report.itemName}" class="catalog-card-img" style="width: 100%; height: 100%; object-fit: cover;">
+          <div class="col-md-6">
+            <div class="card glass-card catalog-card h-100 overflow-hidden border-0 shadow-sm">
+              <div class="card-img-wrapper position-relative overflow-hidden" style="aspect-ratio: 16 / 9; max-height: 180px; width: 100%; background: rgba(0,0,0,0.12);">
+                <span class="type-pill ${badgeClass}">${report.type}</span>
+                <img src="${img}" alt="${report.itemName}" class="catalog-card-img" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div class="card-body p-3 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
+                  <span class="badge-category-pill">${report.category || 'General'}</span>
+                  <span class="status-badge ${statusBadge} px-2 py-0.5" style="font-size: 0.68rem; line-height: 1;">${report.status}</span>
                 </div>
-                <div class="col-sm-7">
-                  <div class="card-body p-3 d-flex flex-column h-100">
-                    <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap gap-1">
-                      <span class="badge-category-pill">${report.category || 'General'}</span>
-                      <span class="status-badge ${statusBadge} px-2 py-0.5" style="font-size: 0.68rem; line-height: 1;">${report.status}</span>
-                    </div>
-                    <h6 class="card-title text-main fw-bold mb-1 mt-1 text-truncate">${report.itemName}</h6>
-                    <p class="card-text text-muted small mb-2 text-truncate-2" style="font-size: 0.8rem; line-height: 1.35;">${report.description}</p>
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                      <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-geo-alt text-emerald me-1"></i>${report.location}</small>
-                      <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i>${timeAgo(report.createdAt)}</small>
-                    </div>
-                    <a href="report-details.html?id=${report.id}" class="btn btn-sm btn-custom btn-custom-primary mt-auto w-100 py-1.5 font-semibold btn-view-details" data-id="${report.id}">
-                      <i class="bi bi-eye-fill me-1"></i> View Details
-                    </a>
-                  </div>
+                <h6 class="card-title text-main fw-bold mb-1 text-truncate">${report.itemName}</h6>
+                <p class="card-text text-muted small mb-2 flex-grow-1 text-truncate-2" style="font-size: 0.8rem; line-height: 1.35;">${report.description}</p>
+                <div class="d-flex align-items-center justify-content-between mb-3 pt-2 border-top border-secondary border-opacity-10">
+                  <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-geo-alt text-emerald me-1"></i>${report.location}</small>
+                  <small class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-clock me-1"></i>${timeAgo(report.createdAt)}</small>
                 </div>
+                <a href="report-details.html?id=${report.id}" class="btn btn-sm btn-custom btn-custom-primary w-100 py-2 font-semibold btn-view-details mt-auto" data-id="${report.id}">
+                  <i class="bi bi-eye-fill me-1"></i> View Details
+                </a>
               </div>
             </div>
           </div>
@@ -795,17 +827,17 @@
             const typeClass = report.type === 'lost' ? 'type-lost' : 'type-found';
 
             const card = `
-              <div class="col-md-4">
-                <div class="card glass-card h-100 overflow-hidden">
-                  <div class="card-img-wrapper">
+              <div class="col-12">
+                <div class="card glass-card catalog-card overflow-hidden border-0 shadow-sm mb-2">
+                  <div class="card-img-wrapper position-relative overflow-hidden rounded-top" style="aspect-ratio: 16 / 9; max-height: 140px; width: 100%; background: rgba(0,0,0,0.12);">
                     <span class="type-pill ${typeClass}">${report.type}</span>
-                    <img src="${img}" alt="${report.itemName}" loading="lazy">
+                    <img src="${img}" alt="${report.itemName}" class="catalog-card-img" style="width: 100%; height: 100%; object-fit: cover;">
                   </div>
-                  <div class="card-body p-3 d-flex flex-column">
-                    <h6 class="card-title text-main fw-bold mb-1">${report.itemName}</h6>
-                    <p class="text-muted small flex-grow-1 mb-2">${report.description.substring(0, 60)}...</p>
-                    <a href="report-details.html?id=${report.id}" class="btn btn-sm btn-custom btn-custom-outline w-100 btn-view-details" data-id="${report.id}">
-                      View Details
+                  <div class="card-body p-2.5 d-flex flex-column">
+                    <h6 class="card-title text-main fw-bold mb-1 text-truncate">${report.itemName}</h6>
+                    <p class="text-muted small mb-2 text-truncate-2" style="font-size: 0.78rem; line-height: 1.35;">${report.description}</p>
+                    <a href="report-details.html?id=${report.id}" class="btn btn-sm btn-custom btn-custom-primary w-100 py-1.5 font-semibold btn-view-details mt-auto" data-id="${report.id}">
+                      <i class="bi bi-eye-fill me-1"></i> View Details
                     </a>
                   </div>
                 </div>

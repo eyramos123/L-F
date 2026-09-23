@@ -67,7 +67,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
   transition: background 0.4s ease, color 0.4s ease;
 }
 
@@ -684,8 +684,10 @@ body {
    ========================================================================== */
 
 .sticky-sidebar {
+  position: -webkit-sticky;
   position: sticky;
   top: 90px;
+  z-index: 10;
   align-self: flex-start;
   max-height: calc(100vh - 105px);
   overflow-y: auto;
@@ -766,23 +768,37 @@ body {
 .filter-pill {
   border-radius: 30px;
   font-weight: 600;
-  font-size: 0.8rem;
-  padding: 6px 16px;
-  transition: all 0.2s ease;
+  font-size: 0.82rem;
+  padding: 8px 18px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border: 1px solid var(--card-border);
   background: var(--card-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: var(--text-main);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  white-space: nowrap;
 }
 
-.filter-pill.active, .filter-pill:hover {
-  background-color: var(--accent-emerald) !important;
+.filter-pill:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-emerald);
+  box-shadow: 0 6px 16px var(--accent-emerald-glow);
+  color: var(--text-main);
+}
+
+.filter-pill.active {
+  background: linear-gradient(135deg, var(--accent-emerald) 0%, #059669 100%) !important;
   color: #ffffff !important;
   border-color: var(--accent-emerald) !important;
-  box-shadow: 0 4px 12px var(--accent-emerald-glow);
+  box-shadow: 0 6px 18px var(--accent-emerald-glow) !important;
+}
+
+.filter-pill.active i {
+  color: #ffffff !important;
 }
 
 .badge-category-pill {
