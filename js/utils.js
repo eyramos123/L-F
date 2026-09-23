@@ -125,7 +125,7 @@ function injectNavbar(userRole) {
 
   header.innerHTML = `
     <nav class="navbar navbar-expand-lg glass-nav fixed-top py-2">
-      <div class="container">
+      <div class="container-fluid px-4 px-xl-5">
         <a class="navbar-brand fw-extrabold d-flex align-items-center gap-2" href="index.html">
           <i class="bi bi-box-seam-fill text-emerald fs-3"></i>
           <span class="fs-4 fw-bold letter-spacing--1">TraceBack</span>
@@ -174,7 +174,7 @@ function injectFooter() {
   
   footer.innerHTML = `
     <div class="glass-footer py-5 mt-auto">
-      <div class="container">
+      <div class="container-fluid px-4 px-xl-5">
         <div class="row g-4 justify-content-between">
           <div class="col-lg-4 col-md-6">
             <div class="d-flex align-items-center gap-2 mb-3">
