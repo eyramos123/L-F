@@ -89,7 +89,7 @@ export function monitorAuthState() {
   const currentPage = window.location.pathname.split("/").pop();
   
   // Public files where login is not strictly required to read
-  const publicPages = ["", "index.html", "login.html"];
+  const publicPages = ["", "index.html", "login.html", "report-details.html"];
   const isPublicPage = publicPages.includes(currentPage);
   
   onAuthStateChanged(auth, async (user) => {

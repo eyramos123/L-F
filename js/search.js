@@ -33,8 +33,8 @@ export async function fetchSearchableReports(includePending = false) {
       const data = doc.data();
       data.id = doc.id;
       
-      // Public view exclusion for pending reports
-      if (includePending || data.status !== 'pending') {
+      // Public view exclusion for pending and rejected reports
+      if (includePending || (data.status !== 'pending' && data.status !== 'rejected')) {
         reports.push(data);
       }
     });

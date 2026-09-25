@@ -46,7 +46,7 @@
     <div class="row g-4">
       
       <!-- ==================== LEFT SIDEBAR ==================== -->
-      <div class="col-xl-3 col-lg-3 sticky-sidebar">
+      <div class="col-xl-3 col-lg-3 order-2 order-lg-1 sticky-sidebar">
         
         <!-- Category Navigator Widget -->
         <div class="card glass-card p-3 mb-4 shadow-sm">
@@ -139,7 +139,7 @@
       </div>
 
       <!-- ==================== CENTER MAIN STREAM ==================== -->
-      <div class="col-xl-6 col-lg-6">
+      <div class="col-xl-6 col-lg-6 order-1 order-lg-2">
         
         <!-- Search & Filter Card -->
         <div class="card glass-card p-3 p-md-4 shadow-sm mb-4">
@@ -311,7 +311,7 @@
       </div>
 
       <!-- ==================== RIGHT SIDEBAR ==================== -->
-      <div class="col-xl-3 col-lg-3 sticky-sidebar">
+      <div class="col-xl-3 col-lg-3 order-3 order-lg-3 sticky-sidebar">
         
         <!-- Action Hub Card -->
         <div class="card glass-card p-3 mb-4 shadow-sm">
@@ -432,23 +432,9 @@
     });
 
     /**
-     * Auth guard helper for viewing item details
+     * Click handler for viewing item details
      */
     function handleViewDetailsClick(e) {
-      if (!auth.currentUser) {
-        e.preventDefault();
-        const guestModalEl = document.getElementById('guestAuthModal');
-        if (guestModalEl) {
-          const bsModal = new bootstrap.Modal(guestModalEl);
-          bsModal.show();
-        } else {
-          showToast("Please sign up or sign in to view item details and contact the reporter.", "warning");
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1200);
-        }
-        return;
-      }
       const reportId = e.currentTarget.getAttribute('data-id');
       if (reportId) logRecentlyViewed(reportId);
     }

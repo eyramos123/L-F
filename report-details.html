@@ -62,27 +62,19 @@
       const urlParams = new URLSearchParams(window.location.search);
       const reportId = urlParams.get('id');
 
-      // Authentication is required to read details and contact owners
       onAuthStateChanged(auth, (user) => {
-        if (user) {
-          if (reportId) {
-            loadReportDetails(reportId);
-          } else {
-            showToast("No report ID provided in the URL.", "danger");
-            document.getElementById('details-container').innerHTML = `
-              <div class="alert alert-danger py-4 text-center">
-                <i class="bi bi-exclamation-triangle-fill fs-3 mb-2 d-block"></i>
-                <h4>Invalid Access</h4>
-                <p class="mb-0">Please return to the search index and choose a valid item card.</p>
-                <a href="index.html" class="btn btn-outline-primary mt-3">Go to Catalog</a>
-              </div>
-            `;
-          }
+        if (reportId) {
+          loadReportDetails(reportId);
         } else {
-          showToast("Please sign up or sign in to view full item details and contact the reporter.", "warning");
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1000);
+          showToast("No report ID provided in the URL.", "danger");
+          document.getElementById('details-container').innerHTML = `
+            <div class="alert alert-danger py-4 text-center">
+              <i class="bi bi-exclamation-triangle-fill fs-3 mb-2 d-block"></i>
+              <h4>Invalid Access</h4>
+              <p class="mb-0">Please return to the search index and choose a valid item card.</p>
+              <a href="index.html" class="btn btn-outline-primary mt-3">Go to Catalog</a>
+            </div>
+          `;
         }
       });
     });
