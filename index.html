@@ -419,16 +419,17 @@
       // Load Statistics & Main Reports
       try {
         allReports = await fetchSearchableReports(false);
-        renderFeaturedCarousel();
-        renderRecentReports();
-        renderStatistics();
-        setupSearchAutocomplete();
-        loadRecentlyViewed();
-        setupQuickCategoryButtons();
-        setupQuickFilterPills();
       } catch (err) {
-        console.error("Initialization error:", err);
+        console.warn("Using fallback showcase reports:", err);
       }
+
+      try { renderFeaturedCarousel(); } catch (e) { console.error(e); }
+      try { renderRecentReports(); } catch (e) { console.error(e); }
+      try { renderStatistics(); } catch (e) { console.error(e); }
+      try { setupSearchAutocomplete(); } catch (e) { console.error(e); }
+      try { loadRecentlyViewed(); } catch (e) { console.error(e); }
+      try { setupQuickCategoryButtons(); } catch (e) { console.error(e); }
+      try { setupQuickFilterPills(); } catch (e) { console.error(e); }
     });
 
     /**

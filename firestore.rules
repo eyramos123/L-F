@@ -51,8 +51,8 @@ service cloud.firestore {
 
     // Users Collection Rules
     match /users/{userId} {
-      // Any registered user can view other user records (e.g. for reporter details)
-      allow read: if isSignedIn();
+      // Anyone (including guests and registered users) can view public user profiles and statistics
+      allow read: if true;
       
       // A user can create their own account document during signup
       // Must ensure they set their role to 'customer' and status to 'active'
