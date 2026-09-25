@@ -138,6 +138,9 @@ function injectNavbar(userRole) {
             <li class="nav-item">
               <a class="nav-link" href="index.html"><i class="bi bi-house-door-fill me-1"></i> Home</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html"><i class="bi bi-envelope-paper-fill me-1"></i> Contact Us</a>
+            </li>
             ${navItems}
           </ul>
           <div class="d-flex align-items-center gap-3">
@@ -202,16 +205,17 @@ function injectFooter() {
               A comprehensive lost and found catalog designed to reconnect owners with their missing items. Production-ready, secure, and intuitive.
             </p>
             <div class="d-flex gap-3">
-              <a href="#" class="text-muted fs-5"><i class="bi bi-facebook"></i></a>
-              <a href="#" class="text-muted fs-5"><i class="bi bi-twitter-x"></i></a>
-              <a href="#" class="text-muted fs-5"><i class="bi bi-instagram"></i></a>
-              <a href="#" class="text-muted fs-5"><i class="bi bi-github"></i></a>
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="text-muted fs-5 hover-text-emerald" title="Facebook"><i class="bi bi-facebook"></i></a>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="text-muted fs-5 hover-text-emerald" title="X (Twitter)"><i class="bi bi-twitter-x"></i></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="text-muted fs-5 hover-text-emerald" title="Instagram"><i class="bi bi-instagram"></i></a>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-muted fs-5 hover-text-emerald" title="GitHub"><i class="bi bi-github"></i></a>
             </div>
           </div>
           <div class="col-lg-2 col-md-6">
             <h6 class="text-uppercase fw-bold text-main mb-3">Navigation</h6>
             <ul class="list-unstyled d-flex flex-column gap-2">
               <li><a href="index.html" class="text-muted text-decoration-none hover-text-main">Home</a></li>
+              <li><a href="contact.html" class="text-muted text-decoration-none hover-text-main">Contact Us</a></li>
               <li><a href="dashboard.html" class="text-muted text-decoration-none hover-text-main">Dashboard</a></li>
               <li><a href="report-lost.html" class="text-muted text-decoration-none hover-text-main">Report Lost</a></li>
               <li><a href="report-found.html" class="text-muted text-decoration-none hover-text-main">Report Found</a></li>

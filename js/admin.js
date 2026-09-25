@@ -55,6 +55,9 @@ export async function initAdminDashboard() {
     // 5. Load user accounts list
     await loadUserAccounts();
 
+    // 6. Load contact form submissions
+    await loadContactMessages();
+
   } catch (err) {
     showToast(err.message, "danger");
   } finally {
@@ -532,6 +535,94 @@ async function updateUserStatus(userId, userName, newStatus) {
 
       showToast(`User "${userName}" is now ${newStatus}.`, "success");
       await initAdminDashboard(); // Reload dashboard
+    } catch (err) {
+      showToast(err.message, "danger");
+    } finally {
+      hideLoader();
+    }
+  }
+}
+
+/**
+ * Load Contact Form Submissions
+ */
+async function loadContactMessages() {
+  const container = document.getElementById('contact-messages-table');
+  const badgeEl = document.getElementById('contact-count-badge');
+  if (!container) return;
+
+  try {
+    const q = query(collection(db, "contactMessages"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+
+    if (badgeEl) {
+      if (querySnapshot.size > 0) {
+        badgeEl.textContent = querySnapshot.size;
+        badgeEl.style.display = 'inline-block';
+      } else {
+        badgeEl.style.display = 'none';
+      }
+    }
+
+    if (querySnapshot.size === 0) {
+      container.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">No contact form messages received.</td></tr>`;
+      return;
+    }
+
+    container.innerHTML = '';
+    querySnapshot.forEach(docSnap => {
+      const msg = docSnap.data();
+      msg.id = docSnap.id;
+
+      const dateStr = msg.createdAt ? (msg.createdAt.toDate ? formatDate(msg.createdAt.toDate()) : formatDate(msg.createdAt)) : 'N/A';
+
+      const row = document.createElement('tr');
+      row.className = 'align-middle animate-fade-in';
+      row.innerHTML = `
+        <td><span class="text-muted small">${dateStr}</span></td>
+        <td>
+          <div class="fw-bold text-main">${msg.fullName || (msg.firstName + ' ' + msg.lastName)}</div>
+          ${msg.senderUid ? '<span class="badge bg-info-subtle text-info" style="font-size:0.65rem;">Registered User</span>' : '<span class="badge bg-secondary-subtle text-secondary" style="font-size:0.65rem;">Guest Visitor</span>'}
+        </td>
+        <td>
+          <a href="mailto:${msg.email}" class="text-emerald text-decoration-none small fw-semibold"><i class="bi bi-envelope me-1"></i>${msg.email}</a>
+        </td>
+        <td>
+          <div class="text-main small" style="max-width: 400px; white-space: pre-wrap; word-wrap: break-word;">${msg.comments || ''}</div>
+        </td>
+        <td>
+          <div class="d-flex gap-1">
+            <a href="mailto:${msg.email}?subject=RE:%20TraceBack%20Inquiry" class="btn btn-sm btn-outline-emerald" title="Reply via Email"><i class="bi bi-reply-fill"></i> Reply</a>
+            <button class="btn btn-sm btn-danger btn-delete-contact-msg" data-id="${msg.id}" data-name="${msg.fullName || 'Sender'}" title="Delete Message"><i class="bi bi-trash"></i></button>
+          </div>
+        </td>
+      `;
+
+      container.appendChild(row);
+    });
+
+    container.querySelectorAll('.btn-delete-contact-msg').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        const name = e.currentTarget.getAttribute('data-name');
+        deleteContactMessage(id, name);
+      });
+    });
+
+  } catch (err) {
+    console.error("Error loading contact messages:", err);
+    container.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Failed to load contact messages.</td></tr>`;
+  }
+}
+
+async function deleteContactMessage(messageId, senderName) {
+  if (confirm(`Are you sure you want to delete the message from ${senderName}?`)) {
+    showLoader();
+    try {
+      await deleteDoc(doc(db, "contactMessages", messageId));
+      await logActivity("delete_contact_message", `Deleted contact message from ${senderName} (${messageId})`);
+      showToast("Contact message deleted.", "success");
+      await loadContactMessages();
     } catch (err) {
       showToast(err.message, "danger");
     } finally {

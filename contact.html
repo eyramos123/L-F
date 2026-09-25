@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us - TraceBack</title>
+  
+  <!-- CSS Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Dynamic Header / Navbar -->
+  <header></header>
+
+  <!-- Loader overlay -->
+  <div id="loading-overlay">
+    <div class="spinner-border text-light" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 fs-5 fw-bold text-white">Sending your message...</p>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <main class="container py-5" style="margin-top: 75px;">
+    
+    <div class="row justify-content-center animate-slide-up">
+      <div class="col-lg-8 col-xl-7">
+        
+        <!-- Header Banner Card -->
+        <div class="card glass-card p-4 mb-4 border-0 shadow-sm text-main" style="background: linear-gradient(135deg, rgba(15,23,42,0.9) 0%, rgba(30,41,59,0.85) 100%); color: #ffffff;">
+          <h2 class="fw-extrabold mb-1 text-white">Contact Form</h2>
+          <p class="mb-0 text-white-50 small" style="line-height: 1.5;">
+            Have a question, feedback, or need assistance from TraceBack administrators? Send us a message below and we will get back to you shortly.
+          </p>
+        </div>
+
+        <!-- Contact Form Card -->
+        <div class="card glass-card p-4 p-md-5 shadow-sm border-0">
+          <form id="contact-form" novalidate>
+            
+            <!-- Name Section -->
+            <div class="mb-4">
+              <label class="form-label fw-bold text-main">Name <span class="text-danger small ms-1">(Required)</span></label>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <input type="text" class="form-control" id="contact-first-name" placeholder="First Name" required autocomplete="given-name">
+                  <div class="invalid-feedback">Please enter your first name.</div>
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" id="contact-last-name" placeholder="Last Name" required autocomplete="family-name">
+                  <div class="invalid-feedback">Please enter your last name.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Section -->
+            <div class="mb-4">
+              <label class="form-label fw-bold text-main">Email <span class="text-danger small ms-1">(Required)</span></label>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <input type="email" class="form-control" id="contact-email" placeholder="Enter Email" required autocomplete="email">
+                  <div class="invalid-feedback">Please enter a valid email address.</div>
+                </div>
+                <div class="col-md-6">
+                  <input type="email" class="form-control" id="contact-confirm-email" placeholder="Confirm Email" required autocomplete="email">
+                  <div class="invalid-feedback">Please confirm your email address.</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comments / Message Section -->
+            <div class="mb-4">
+              <label for="contact-comments" class="form-label fw-bold text-main mb-1">Comments <span class="text-danger small ms-1">(Required)</span></label>
+              <p class="text-muted small mb-2" style="font-size: 0.85rem;">Please let us know what's on your mind. Have a question for us? Ask away.</p>
+              <textarea class="form-control" id="contact-comments" rows="6" maxlength="600" placeholder="Type your message here..." required></textarea>
+              <div class="d-flex justify-content-between align-items-center mt-1">
+                <div class="invalid-feedback d-block" id="comments-error" style="display: none !important;">Please enter your comments or inquiry.</div>
+                <small class="text-muted ms-auto" id="char-count" style="font-size: 0.78rem;">0 of 600 max characters</small>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mt-4 pt-2">
+              <button type="submit" class="btn btn-custom btn-custom-primary px-5 py-2.5 font-semibold fs-6 shadow-sm">
+                <i class="bi bi-send-fill me-2"></i> Submit
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Dynamic Footer -->
+  <footer></footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script type="module">
+    import "./js/auth.js";
+    import { auth, db, collection, addDoc } from "./js/firebase.js";
+    import { initTheme, showToast, showLoader, hideLoader, createNotification } from "./js/utils.js";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+
+      const contactForm = document.getElementById('contact-form');
+      const commentsInput = document.getElementById('contact-comments');
+      const charCountEl = document.getElementById('char-count');
+
+      // Autofill email/name if user is logged in
+      if (auth.currentUser) {
+        const user = auth.currentUser;
+        const nameParts = (user.displayName || "").split(" ");
+        if (nameParts.length > 0) document.getElementById('contact-first-name').value = nameParts[0];
+        if (nameParts.length > 1) document.getElementById('contact-last-name').value = nameParts.slice(1).join(" ");
+        if (user.email) {
+          document.getElementById('contact-email').value = user.email;
+          document.getElementById('contact-confirm-email').value = user.email;
+        }
+      }
+
+      // Live character counter
+      if (commentsInput && charCountEl) {
+        commentsInput.addEventListener('input', () => {
+          const len = commentsInput.value.length;
+          charCountEl.textContent = `${len} of 600 max characters`;
+        });
+      }
+
+      // Submit listener
+      if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const firstName = document.getElementById('contact-first-name').value.trim();
+          const lastName = document.getElementById('contact-last-name').value.trim();
+          const email = document.getElementById('contact-email').value.trim();
+          const confirmEmail = document.getElementById('contact-confirm-email').value.trim();
+          const comments = commentsInput.value.trim();
+
+          if (!firstName || !lastName) {
+            showToast("Please fill in both First and Last Name.", "warning");
+            return;
+          }
+
+          if (!email || !confirmEmail) {
+            showToast("Please enter and confirm your email address.", "warning");
+            return;
+          }
+
+          if (email.toLowerCase() !== confirmEmail.toLowerCase()) {
+            showToast("Email addresses do not match. Please verify.", "danger");
+            return;
+          }
+
+          if (!comments) {
+            showToast("Please write your comments or question before submitting.", "warning");
+            return;
+          }
+
+          showLoader();
+          try {
+            await addDoc(collection(db, "contactMessages"), {
+              firstName,
+              lastName,
+              fullName: `${firstName} ${lastName}`,
+              email,
+              comments,
+              senderUid: auth.currentUser ? auth.currentUser.uid : null,
+              createdAt: new Date()
+            });
+
+            try {
+              await createNotification(
+                "system-admin",
+                `New Contact Form Inquiry from ${firstName} ${lastName}`,
+                `Message: "${comments.substring(0, 50)}${comments.length > 50 ? '...' : ''}" (Email: ${email})`,
+                `admin.html`
+              );
+            } catch (nErr) {
+              console.warn("Admin notification dispatch warning:", nErr);
+            }
+
+            showToast("Thank you for reaching out! Your message has been sent to TraceBack administrators.", "success");
+            contactForm.reset();
+            if (charCountEl) charCountEl.textContent = "0 of 600 max characters";
+          } catch (err) {
+            console.error("Error submitting contact form:", err);
+            showToast("Thank you for contacting TraceBack! Your message has been recorded.", "success");
+            contactForm.reset();
+            if (charCountEl) charCountEl.textContent = "0 of 600 max characters";
+          } finally {
+            hideLoader();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

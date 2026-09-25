@@ -136,5 +136,14 @@ service cloud.firestore {
       // Activity logs are immutable and cannot be edited or deleted
       allow update, delete: if false;
     }
+
+    // Contact Messages Collection Rules
+    match /contactMessages/{messageId} {
+      // Anyone (including guests and authenticated users) can submit a contact inquiry
+      allow create: if true;
+      
+      // Only admins can read, manage, or delete contact messages
+      allow read, update, delete: if isAdmin();
+    }
   }
 }
